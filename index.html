@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Luxe Scent Privé – Premium curated oil-based luxury fragrances.">
+<meta name="keywords" content="luxury perfume philippines, oil based perfume, niche fragrance">
+<meta name="author" content="Ralph Castanares">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://luxescentprive.com">
+
+<title>LUXE SCENT PRIVÉ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Store",
+ "name": "Luxe Scent Privé",
+ "priceRange": "₱₱",
+ "address": {
+   "@type": "PostalAddress",
+   "addressCountry": "PH"
+ }
+}
+</script>
+</head>
+
+<body>
+
+<header class="hero">
+  <div class="overlay">
+    <h1>LUXE Scent Privé</h1>
+    <p>Enter the Vault of Modern Luxury</p>
+    <a href="#catalogue" class="btn-gold">Explore Collection</a>
+  </div>
+</header>
+
+<section id="catalogue" class="catalogue">
+  <h2>The Collection</h2>
+
+  <div class="filters">
+    <button data-filter="all">All</button>
+    <button data-filter="Men">Men</button>
+    <button data-filter="Women">Women</button>
+    <button data-filter="Unisex">Unisex</button>
+    <button data-filter="Best Seller">Best Sellers</button>
+  </div>
+
+  <h3>Standard Luxury – ₱899</h3>
+  <div id="standard" class="product-grid"></div>
+
+  <h3>Premium Luxury – ₱1,250</h3>
+  <div id="premium" class="product-grid"></div>
+</section>
+
+<section class="about hidden">
+  <h2>The Luxe Standard</h2>
+  <p>We curate only the highest-grade oil-based testers for the modern enthusiast. Each batch is inspected for longevity, projection, and purity.</p>
+</section>
+
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
