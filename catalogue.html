@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Browse the Luxe Scent Privé fragrance collection.">
+<meta name="theme-color" content="#000000">
+<title>Collection | LUXE SCENT PRIVÉ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="fade">
+
+<nav class="navbar">
+  <a href="index.html" class="logo">LUXE SCENT PRIVÉ</a>
+  <div>
+    <a href="catalogue.html">Collection</a>
+    <a href="about.html">About</a>
+  </div>
+</nav>
+
+<section class="catalogue-page">
+  <h2>The Collection</h2>
+
+  <div class="filters">
+    <button data-filter="all">All</button>
+    <button data-filter="Men">Men</button>
+    <button data-filter="Women">Women</button>
+    <button data-filter="Unisex">Unisex</button>
+    <button data-filter="Best Seller">Best Sellers</button>
+  </div>
+
+  <h3>Standard Luxury – ₱899</h3>
+  <div id="standard" class="product-grid"></div>
+
+  <h3>Premium Luxury – ₱1,250</h3>
+  <div id="premium" class="product-grid"></div>
+</section>
+
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html> 
