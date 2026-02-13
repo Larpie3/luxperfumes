@@ -1,0 +1,155 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: #000;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+body.loaded {
+  opacity: 1;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 1px;
+}
+
+.hero {
+  height: 100vh;
+  background: url('https://images.unsplash.com/photo-1592945403244-b3fbafd7f539') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.overlay {
+  background: rgba(0,0,0,0.7);
+  padding: 2rem;
+}
+
+.hero h1,
+.hero p,
+.hero .btn-gold {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+}
+
+.hero.show h1 { opacity:1; transform:translateY(0); transition-delay:0.2s; }
+.hero.show p { opacity:1; transform:translateY(0); transition-delay:0.5s; }
+.hero.show .btn-gold { opacity:1; transform:translateY(0); transition-delay:0.8s; }
+
+.btn-gold {
+  background: #D4AF37;
+  color: #000;
+  padding: 12px 24px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.btn-gold:hover {
+  box-shadow: 0 0 20px rgba(212,175,55,0.4);
+}
+
+.btn-gold:active {
+  transform: scale(0.97);
+}
+
+.catalogue {
+  padding: 2rem;
+}
+
+.filters button {
+  background: #111;
+  border: 1px solid #D4AF37;
+  color: #D4AF37;
+  margin: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.product-card {
+  background: #111;
+  padding: 1rem;
+  border: 1px solid #333;
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(212,175,55,0.25);
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stock.low {
+  color: red;
+  animation: pulse 1.2s infinite;
+}
+
+.stock.medium {
+  color: #D4AF37;
+}
+
+@keyframes pulse {
+  0% { opacity:1; }
+  50% { opacity:0.6; }
+  100% { opacity:1; }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background: #111;
+  padding: 2rem;
+  margin: 5% auto;
+  width: 90%;
+  max-width: 600px;
+  transform: scale(0.9);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.modal.show .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.close {
+  float: right;
+  cursor: pointer;
+} 
