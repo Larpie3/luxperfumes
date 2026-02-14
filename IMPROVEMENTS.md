@@ -307,11 +307,12 @@ window.openModal = function(id) {
 };
 ```
 
-4. **Alt text for images**:
+4. **Alt text for images** (in JavaScript template literal):
 ```javascript
-<img src="${p.image}" 
-     alt="${p.brand} ${p.name} - ${p.category} perfume" 
-     loading="lazy">
+// In createCard() function
+`<img src="${p.image}" 
+      alt="${p.brand} ${p.name} - ${p.category} perfume" 
+      loading="lazy">`
 ```
 
 ---

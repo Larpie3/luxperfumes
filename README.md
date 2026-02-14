@@ -148,13 +148,19 @@ Border:        #EAEAEA
 
 ### Update WhatsApp Number
 
-In `app.js`, line 94, replace `YOURNUMBER` with your WhatsApp number:
+In `app.js`, line 94, replace `YOURNUMBER` with your WhatsApp number in the template literal:
 
 ```javascript
-onclick="window.open('https://wa.me/YOUR_WHATSAPP_NUMBER?text=Inquiry for ${p.name}')"
+// Inside the button onclick attribute in app.js
+window.open('https://wa.me/YOUR_WHATSAPP_NUMBER?text=Inquiry for ${p.name}')
 ```
 
 Format: Country code + number (e.g., `639171234567` for Philippines)
+
+Example:
+```javascript
+onclick="window.open('https://wa.me/639171234567?text=Inquiry for ${p.name}')"
+```
 
 ### Add New Products
 
