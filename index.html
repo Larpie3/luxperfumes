@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Scent Privé</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="custom-cursor"></div>
+
+    <nav>
+        <div class="logo">LUXE SCENT PRIVÉ</div>
+        <div class="nav-links">
+            <a href="#" onclick="showPage('home')">Home</a>
+            <a href="#" onclick="showPage('catalogue')">Collection</a>
+            <a href="#" onclick="showPage('about')">Heritage</a>
+        </div>
+        <div class="mobile-menu-icon" onclick="toggleMobileMenu()">☰</div>
+    </nav>
+
+    <div class="mobile-nav-overlay" id="mobile-nav">
+        <span class="close-nav" onclick="toggleMobileMenu()">&times;</span>
+        <a href="#" onclick="showPage('home'); toggleMobileMenu()">Home</a>
+        <a href="#" onclick="showPage('catalogue'); toggleMobileMenu()">Collection</a>
+        <a href="#" onclick="showPage('about'); toggleMobileMenu()">Heritage</a>
+    </div>
+
+    <main id="content">
+        <section id="home" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>The Art of Olfaction</h1>
+                    <p>A curated anthology of the world's most prestigious essences.</p>
+                    <button class="gold-btn" onclick="showPage('catalogue')">Enter Boutique</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="catalogue" class="page">
+            <header class="catalogue-header">
+                <h2>The Collection</h2>
+                <div class="filter-wrapper">
+                    <div class="filter-bar">
+                        <button class="filter-btn active" onclick="filterProducts('All')">All</button>
+                        <button class="filter-btn" onclick="filterProducts('Men')">Men</button>
+                        <button class="filter-btn" onclick="filterProducts('Women')">Women</button>
+                        <button class="filter-btn" onclick="filterProducts('Unisex')">Unisex</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div id="product-grid" class="grid"></div>
+
+            <div class="archive-section">
+                <button class="archive-toggle" onclick="toggleArchive()">
+                    <span>Archived Collection (Unavailable)</span>
+                    <span id="archive-icon">+</span>
+                </button>
+                <div id="archive-container" class="archive-container">
+                    <div id="archive-grid" class="grid opacity-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="page">
+            <div class="about-container">
+                <h2>The Heritage</h2>
+                <p>Luxe Scent Privé stands as a bastion of timeless elegance. We do not merely sell fragrance; we curate memories, emotions, and invisible signatures.</p>
+                <div class="divider"></div>
+                <a href="#" class="gold-link">Contact Concierge</a>
+            </div>
+        </section>
+    </main>
+
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
