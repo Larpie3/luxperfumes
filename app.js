@@ -91,7 +91,7 @@ window.openModal = function(id) {
             </p>
 
             <button class="gold-btn" style="width: 100%; background: ${p.stock > 0 ? 'var(--text-main)' : 'transparent'}; color: ${p.stock > 0 ? '#fff' : 'var(--text-main)'};" 
-            onclick="window.open('https://wa.me/YOURNUMBER?text=Inquiry for ${p.name}')">
+            onclick="window.open('https://m.me/ralphcastanares.3')">
                 ${p.stock > 0 ? 'Acquire via Concierge' : 'Join Waitlist'}
             </button>
         </div>
