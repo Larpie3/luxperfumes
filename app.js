@@ -419,14 +419,51 @@ window.addEventListener('scroll', () => {
     }
 
     const header = document.querySelector('.catalogue-header');
+    const trigger = document.getElementById('sticky-trigger');
     if (header && document.getElementById('catalogue').classList.contains('active')) {
         if (window.scrollY > 200) {
             header.classList.add('sticky');
+            trigger.style.display = 'block';
         } else {
             header.classList.remove('sticky');
+            header.classList.remove('visible');
+            trigger.style.display = 'none';
         }
+    } else {
+        if (trigger) trigger.style.display = 'none';
     }
 });
+
+// --- Sticky header hover-reveal ---
+(function() {
+    const trigger = document.getElementById('sticky-trigger');
+    const getHeader = () => document.querySelector('.catalogue-header.sticky');
+    let hideTimeout;
+
+    function showStickyHeader() {
+        clearTimeout(hideTimeout);
+        const header = getHeader();
+        if (header) header.classList.add('visible');
+    }
+
+    function scheduleStickyHide() {
+        hideTimeout = setTimeout(() => {
+            const header = getHeader();
+            if (header) header.classList.remove('visible');
+        }, 300);
+    }
+
+    trigger.addEventListener('mouseenter', showStickyHeader);
+    trigger.addEventListener('mouseleave', scheduleStickyHide);
+
+    // Main nav bar also triggers the dropdown
+    const nav = document.querySelector('nav');
+    nav.addEventListener('mouseenter', showStickyHeader);
+    nav.addEventListener('mouseleave', scheduleStickyHide);
+
+    document.querySelector('.catalogue-header').addEventListener('mouseenter', showStickyHeader);
+    document.querySelector('.catalogue-header').addEventListener('mouseleave', scheduleStickyHide);
+})();
 
 showPage('home');
 renderBundleBuilder();
