@@ -73,7 +73,14 @@
                     </select>
                 </div>
             </header>
-            
+
+            <div id="bundle-promo" class="bundle-promo" style="display:none;" onclick="document.getElementById('bundle-section').scrollIntoView({behavior:'smooth'})">
+                <span class="bundle-promo-badge">NEW</span>
+                <h3 class="bundle-promo-title">Discount Bundles Available</h3>
+                <p class="bundle-promo-text">Pair a <strong>Premium</strong> + <strong>Standard</strong> fragrance and save <span id="bundle-promo-pct"></span>% — build your perfect bundle below.</p>
+                <span class="bundle-promo-cta">Build Your Bundle ↓</span>
+            </div>
+
             <div id="product-grid" class="grid"></div>
 
             <div id="bundle-section" class="bundle-section" style="display:none;">

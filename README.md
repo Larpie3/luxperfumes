@@ -46,7 +46,7 @@ luxperfumes/
 ├── style.css           # Main stylesheet with custom properties
 ├── app.js              # Main application logic (ES6 modules)
 ├── products.js         # Product data export
-├── images/             # Product images (24 perfume images)
+├── images/             # Product images (23 perfume images)
 │   ├── dior-sauvage.jpg
 │   ├── br540.jpg
 │   ├── aventus.jpg

@@ -45,11 +45,17 @@ function renderBundleBuilder() {
 
     if (premiums.length === 0 || standards.length === 0) {
         bundleSection.style.display = 'none';
+        document.getElementById('bundle-promo').style.display = 'none';
         return;
     }
 
     bundleSection.style.display = 'block';
     discountPct.textContent = BUNDLE_DISCOUNT_PERCENT;
+
+    // Show and update the promo banner
+    const promo = document.getElementById('bundle-promo');
+    promo.style.display = 'block';
+    document.getElementById('bundle-promo-pct').textContent = BUNDLE_DISCOUNT_PERCENT;
 
     // Populate premium select
     premiumSelect.innerHTML = '<option value="">— Choose a Premium —</option>' +
