@@ -1,4 +1,4 @@
-import products from './products.js';
+import products, { BUNDLE_DISCOUNT_PERCENT } from './products.js';
 
 // Generate a random promo discount between 10-15% for each user session
 function getUserPromoDiscount() {
@@ -10,12 +10,6 @@ function getUserPromoDiscount() {
     return Number(discount);
 }
 const USER_PROMO_DISCOUNT = getUserPromoDiscount();
-
-function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
 
 let currentCategory = 'All';
 let currentSearch = '';
@@ -34,9 +28,6 @@ window.showPage = function(pageId) {
     });
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    const titles = { home: 'Luxe Scent Privé — Premium Perfume Boutique', catalogue: 'Collection — Luxe Scent Privé', about: 'Heritage — Luxe Scent Privé' };
-    document.title = titles[pageId] || 'Luxe Scent Privé';
 
     if(pageId === 'catalogue') {
         renderCatalogue();
@@ -92,12 +83,12 @@ function renderBundleBuilder() {
         let html = '<option value="">— Choose Fragrance —</option>';
         if (premiums.length > 0) {
             html += '<optgroup label="★ Premium">';
-            html += premiums.map(p => `<option value="${p.id}">${escapeHtml(p.brand)} — ${escapeHtml(p.name)} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+            html += premiums.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
             html += '</optgroup>';
         }
         if (standards.length > 0) {
             html += '<optgroup label="Standard">';
-            html += standards.map(p => `<option value="${p.id}">${escapeHtml(p.brand)} — ${escapeHtml(p.name)} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+            html += standards.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
             html += '</optgroup>';
         }
         return html;
@@ -114,13 +105,8 @@ window.updateBundleSummary = function() {
     const id2 = document.getElementById('bundle-select-2').value;
     const summary = document.getElementById('bundle-summary');
 
-    if (!id1 || !id2) {
+    if (!id1 || !id2 || id1 === id2) {
         summary.style.display = 'none';
-        return;
-    }
-    if (id1 === id2) {
-        summary.innerHTML = '<p class="bundle-duplicate-msg">Please select two different fragrances.</p>';
-        summary.style.display = 'block';
         return;
     }
 
@@ -137,15 +123,15 @@ window.updateBundleSummary = function() {
     summary.innerHTML = `
         <div class="bundle-summary-items">
             <div class="bundle-summary-item" onclick="openModal('${product1.id}')">
-                <img src="${product1.image}" alt="${escapeHtml(product1.name)}">
+                <img src="${product1.image}" alt="${product1.name}">
                 ${badgeHtml(product1)}
-                <p>${escapeHtml(product1.brand)} — ${escapeHtml(product1.name)}</p>
+                <p>${product1.brand} — ${product1.name}</p>
             </div>
             <span class="bundle-plus">+</span>
             <div class="bundle-summary-item" onclick="openModal('${product2.id}')">
-                <img src="${product2.image}" alt="${escapeHtml(product2.name)}">
+                <img src="${product2.image}" alt="${product2.name}">
                 ${badgeHtml(product2)}
-                <p>${escapeHtml(product2.brand)} — ${escapeHtml(product2.name)}</p>
+                <p>${product2.brand} — ${product2.name}</p>
             </div>
         </div>
         <div class="bundle-pricing">
@@ -199,14 +185,6 @@ function renderCatalogue() {
     const available = filtered.filter(p => p.stock > 0);
     const archived = filtered.filter(p => p.stock === 0);
 
-    const countEl = document.getElementById('product-count');
-    if (countEl) {
-        const total = products.filter(p => p.stock > 0).length;
-        countEl.textContent = available.length === total
-            ? `Showing all ${total} fragrances`
-            : `Showing ${available.length} of ${total} fragrances`;
-    }
-
     if (available.length === 0) {
         mainGrid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 4rem; color:#999;">Currently exclusive to waitlist.</div>';
     } else {
@@ -246,9 +224,9 @@ function createCard(p, isArchive = false) {
         <div class="product-card" onclick="openModal('${p.id}')">
             ${premiumBadge}
             ${compareBtn}
-            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" loading="lazy">
-            <h3>${escapeHtml(p.brand)}</h3>
-            <p>${escapeHtml(p.name)}</p>
+            <img src="${p.image}" alt="${p.name}" loading="lazy">
+            <h3>${p.brand}</h3>
+            <p>${p.name}</p>
             ${priceHtml}
         </div>
     `;
@@ -270,7 +248,7 @@ window.filterProducts = function(category) {
 };
 
 window.searchProducts = function(query) {
-    currentSearch = query.replace(/[<>&"']/g, '');
+    currentSearch = query;
     renderCatalogue();
 };
 
@@ -292,12 +270,10 @@ window.toggleArchive = function() {
     const isOpen = container.classList.contains('open');
     icon.textContent = isOpen ? '−' : '+';
     toggle.setAttribute('aria-expanded', isOpen);
-    sessionStorage.setItem('archiveOpen', isOpen);
 };
 
 window.openModal = function(id) {
     const p = products.find(prod => prod.id === id);
-    if (!p) return;
     const modal = document.getElementById('product-modal');
     const body = document.getElementById('modal-body');
     const hasDiscount = p.discount > 0 && p.stock > 0;
@@ -317,17 +293,17 @@ window.openModal = function(id) {
     
     body.innerHTML = `
         <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
-            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" style="max-width: 100%; max-height: 400px; object-fit: contain; mix-blend-mode: multiply;">
+            <img src="${p.image}" alt="${p.brand} ${p.name}" style="max-width: 100%; max-height: 400px; object-fit: contain; mix-blend-mode: multiply;">
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             ${premiumLabel}
-            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px; font-weight:600; color:#1A1A1A;">${escapeHtml(p.brand)}</h2>
-            <h3 style="font-size: 1.2rem; font-weight: 400; margin-bottom: 1.5rem; color:#333;">${escapeHtml(p.name)}</h3>
-            <p style="font-style: italic; color: #555; margin-bottom: 1.5rem; font-size:0.95rem;">"${escapeHtml(p.desc)}"</p>
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px; font-weight:600; color:#1A1A1A;">${p.brand}</h2>
+            <h3 style="font-size: 1.2rem; font-weight: 400; margin-bottom: 1.5rem; color:#333;">${p.name}</h3>
+            <p style="font-style: italic; color: #555; margin-bottom: 1.5rem; font-size:0.95rem;">"${p.desc}"</p>
             
             <div style="margin: 0 0 20px; padding: 15px; background: #faf8f3; border-left: 3px solid var(--gold);">
                 <strong style="text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; color:#1A1A1A;">Notes</strong><br>
-                <span style="font-size:0.95rem; color:#333; font-weight:400;">${escapeHtml(p.notes)}</span>
+                <span style="font-size:0.95rem; color:#333; font-weight:400;">${p.notes}</span>
             </div>
 
             <p class="price" style="font-size: 1.8rem; margin-bottom: 2rem; font-weight:700; letter-spacing:0.5px;">
@@ -342,7 +318,6 @@ window.openModal = function(id) {
     `;
     modal.style.display = "block";
     document.body.style.overflow = 'hidden'; 
-    modal.querySelector('.close').focus();
 };
 
 window.closeModal = () => {
@@ -407,7 +382,7 @@ function updateCompareTray() {
 
     items.innerHTML = compareList.map(id => {
         const p = products.find(prod => prod.id === id);
-        return `<img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" title="${escapeHtml(p.brand)} — ${escapeHtml(p.name)}">`;
+        return `<img src="${p.image}" alt="${p.name}" title="${p.brand} — ${p.name}">`;
     }).join('');
 }
 
@@ -429,25 +404,25 @@ window.openCompareModal = function() {
         const premiumLabel = p.premium ? '<span class="premium-badge premium-badge-inline">★ Premium</span>' : '';
         return `
             <div class="compare-column">
-                <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}">
+                <img src="${p.image}" alt="${p.brand} ${p.name}">
                 ${premiumLabel}
-                <h3>${escapeHtml(p.brand)}</h3>
-                <h4>${escapeHtml(p.name)}</h4>
+                <h3>${p.brand}</h3>
+                <h4>${p.name}</h4>
                 <div class="compare-row">
                     <div class="compare-row-label">Price</div>
                     <div class="compare-row-value price">₱${price.toLocaleString()}</div>
                 </div>
                 <div class="compare-row">
                     <div class="compare-row-label">Category</div>
-                    <div class="compare-row-value">${escapeHtml(p.category)}</div>
+                    <div class="compare-row-value">${p.category}</div>
                 </div>
                 <div class="compare-row">
                     <div class="compare-row-label">Notes</div>
-                    <div class="compare-row-value">${escapeHtml(p.notes)}</div>
+                    <div class="compare-row-value">${p.notes}</div>
                 </div>
                 <div class="compare-row">
                     <div class="compare-row-label">Description</div>
-                    <div class="compare-row-value compare-row-value-desc">"${escapeHtml(p.desc)}"</div>
+                    <div class="compare-row-value compare-row-value-desc">"${p.desc}"</div>
                 </div>
             </div>
         `;
@@ -455,7 +430,6 @@ window.openCompareModal = function() {
 
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
-    modal.querySelector('.close').focus();
 };
 
 window.closeCompareModal = function() {
@@ -506,7 +480,7 @@ window.addEventListener('scroll', () => {
         hideTimeout = setTimeout(() => {
             const header = getHeader();
             if (header) header.classList.remove('visible');
-        }, 500);
+        }, 300);
     }
 
     if (trigger) {
@@ -524,18 +498,6 @@ window.addEventListener('scroll', () => {
         catalogueHeader.addEventListener('mouseleave', scheduleStickyHide);
     }
 })();
-
-// Restore archive state
-if (sessionStorage.getItem('archiveOpen') === 'true') {
-    const container = document.getElementById('archive-container');
-    const icon = document.getElementById('archive-icon');
-    const toggle = document.querySelector('.archive-toggle');
-    if (container) {
-        container.classList.add('open');
-        icon.textContent = '−';
-        toggle.setAttribute('aria-expanded', 'true');
-    }
-}
 
 showPage('home');
 renderBundleBuilder();

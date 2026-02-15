@@ -10,20 +10,10 @@
     <meta property="og:description" content="A curated anthology of the world's most prestigious essences.">
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Luxe Scent Privé",
-      "description": "A curated anthology of the world's most prestigious essences.",
-      "url": "https://luxescentprive.com"
-    }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="custom-cursor" aria-hidden="true"></div>
-    <a href="#content" class="skip-link">Skip to main content</a>
+    <div id="custom-cursor"></div>
 
     <nav role="navigation" aria-label="Main navigation">
         <div class="logo">LUXE SCENT PRIVÉ</div>
@@ -98,7 +88,6 @@
                 </div>
             </header>
 
-            <div id="product-count" class="product-count" aria-live="polite"></div>
             <div id="product-grid" class="grid"></div>
 
             <div id="bundle-section" class="bundle-section" style="display:none;">
@@ -177,14 +166,14 @@
 
     <div id="product-modal" class="modal" role="dialog" aria-modal="true" aria-label="Product details">
         <div class="modal-content">
-            <button class="close" onclick="closeModal()" aria-label="Close" tabindex="0">&times;</button>
+            <span class="close" onclick="closeModal()" aria-label="Close" role="button" tabindex="0">&times;</span>
             <div id="modal-body"></div>
         </div>
     </div>
 
     <button id="back-to-top" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
 
-    <div id="sticky-trigger" aria-hidden="true"></div>
+    <div id="sticky-trigger"></div>
 
     <div id="compare-tray" class="compare-tray" style="display:none;">
         <div class="compare-tray-inner">
@@ -197,7 +186,7 @@
 
     <div id="compare-modal" class="modal" role="dialog" aria-modal="true" aria-label="Compare fragrances">
         <div class="modal-content compare-modal-content">
-            <button class="close" onclick="closeCompareModal()" aria-label="Close" tabindex="0">&times;</button>
+            <span class="close" onclick="closeCompareModal()" aria-label="Close" role="button" tabindex="0">&times;</span>
             <div id="compare-body" class="compare-body"></div>
         </div>
     </div>
