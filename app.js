@@ -7,6 +7,10 @@ window.showPage = function(pageId) {
     pages.forEach(p => p.classList.remove('active'));
     
     document.getElementById(pageId).classList.add('active');
+
+    document.querySelectorAll('.nav-link').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === pageId);
+    });
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -140,16 +144,26 @@ function createBundleCard(b) {
 
 window.filterProducts = function(category) {
     currentCategory = category;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+    });
+    const clicked = document.querySelector(`.filter-btn[onclick*="'${category}'"]`);
+    if (clicked) {
+        clicked.classList.add('active');
+        clicked.setAttribute('aria-pressed', 'true');
+    }
     renderCatalogue();
 };
 
 window.toggleArchive = function() {
     const container = document.getElementById('archive-container');
     const icon = document.getElementById('archive-icon');
+    const toggle = document.querySelector('.archive-toggle');
     container.classList.toggle('open');
-    icon.textContent = container.classList.contains('open') ? '−' : '+';
+    const isOpen = container.classList.contains('open');
+    icon.textContent = isOpen ? '−' : '+';
+    toggle.setAttribute('aria-expanded', isOpen);
 };
 
 window.openModal = function(id) {
@@ -173,7 +187,7 @@ window.openModal = function(id) {
     
     body.innerHTML = `
         <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
-            <img src="${p.image}" style="max-width: 100%; max-height: 400px; object-fit: contain; mix-blend-mode: multiply;">
+            <img src="${p.image}" alt="${p.brand} ${p.name}" style="max-width: 100%; max-height: 400px; object-fit: contain; mix-blend-mode: multiply;">
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             ${premiumLabel}
@@ -208,6 +222,18 @@ window.closeModal = () => {
 window.onclick = (e) => {
     if (e.target == document.getElementById('product-modal')) closeModal();
 }
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (document.getElementById('product-modal').style.display === 'block') {
+            closeModal();
+        }
+        const mobileNav = document.getElementById('mobile-nav');
+        if (mobileNav.classList.contains('open')) {
+            toggleMobileMenu();
+        }
+    }
+});
 
 document.addEventListener('mousemove', (e) => {
     const cursor = document.getElementById('custom-cursor');
