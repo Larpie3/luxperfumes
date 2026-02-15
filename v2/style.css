@@ -513,7 +513,7 @@ nav {
 /* Compare Button on Cards */
 .compare-checkbox {
     position: absolute;
-    top: 1rem;
+    bottom: 1rem;
     right: 1rem;
     width: 28px;
     height: 28px;
