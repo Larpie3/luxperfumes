@@ -66,6 +66,7 @@ nav {
 
 .page { display: none; min-height: 100vh; animation: fadeIn 0.8s ease; }
 .page.active { display: block; }
+#home { position: relative; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .hero {
@@ -136,15 +137,26 @@ nav {
 .bundle-section { padding: 2rem 5% 4rem; text-align: center; }
 
 .bundle-promo.home-bundle-promo {
-    margin: 0 auto;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
     max-width: 700px;
+    width: calc(100% - 2rem);
     padding: 2rem 2.5rem;
+    z-index: 10;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+.bundle-promo.home-bundle-promo:hover {
+    transform: translateX(-50%) translateY(-3px);
 }
 
 #catalogue > .bundle-promo {
-    padding-top: calc(4rem + 1rem);
+    padding-top: 1.2rem;
+    margin-top: calc(4rem + 2rem);
     max-width: 700px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .bundle-promo {
@@ -659,7 +671,9 @@ nav {
     .product-card h3 { font-size: 0.9rem; }
     .product-card p { font-size: 0.8rem; }
     .price { font-size: 1.2rem; }
-    .bundle-promo { padding: 1.5rem 1rem; margin: 0 3% 2rem; }
+    .bundle-promo { padding: 1.5rem 1rem; }
+    #catalogue > .bundle-promo { margin-left: 3%; margin-right: 3%; margin-bottom: 2rem; }
+    .bundle-promo.home-bundle-promo { bottom: 1rem; padding: 1.5rem 1rem; }
     .bundle-promo-title { font-size: 1.2rem; }
     .bundle-promo-text { font-size: 0.75rem; }
     .about-container h2 { font-size: 2rem; }
