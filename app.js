@@ -4,6 +4,7 @@ let currentCategory = 'All';
 let currentSearch = '';
 let currentPriceRange = '';
 let currentSort = '';
+let compareList = [];
 
 window.showPage = function(pageId) {
     const pages = document.querySelectorAll('.page');
@@ -163,6 +164,12 @@ function createCard(p, isArchive = false) {
     const premiumBadge = p.premium ? '<span class="premium-badge">★ Premium</span>' : '';
     const hasDiscount = p.discount > 0 && p.stock > 0;
     const discountedPrice = getDiscountedPrice(p);
+    const isCompared = compareList.includes(p.id);
+
+    let compareBtn = '';
+    if (!isArchive) {
+        compareBtn = `<span class="compare-checkbox ${isCompared ? 'selected' : ''}" onclick="event.stopPropagation(); toggleCompare('${p.id}')" title="Compare">✓</span>`;
+    }
 
     let priceHtml;
     if (isArchive) {
@@ -179,6 +186,7 @@ function createCard(p, isArchive = false) {
     return `
         <div class="product-card" onclick="openModal('${p.id}')">
             ${premiumBadge}
+            ${compareBtn}
             <img src="${p.image}" alt="${p.name}" loading="lazy">
             <h3>${p.brand}</h3>
             <p>${p.name}</p>
@@ -194,7 +202,7 @@ window.filterProducts = function(category) {
         b.classList.remove('active');
         b.setAttribute('aria-pressed', 'false');
     });
-    const clicked = document.querySelector(`.filter-btn[onclick*="'${category}'"]`);
+    const clicked = document.querySelector(`.filter-btn[data-category="${category}"]`);
     if (clicked) {
         clicked.classList.add('active');
         clicked.setAttribute('aria-pressed', 'true');
@@ -282,12 +290,16 @@ window.closeModal = () => {
 
 window.onclick = (e) => {
     if (e.target == document.getElementById('product-modal')) closeModal();
+    if (e.target == document.getElementById('compare-modal')) closeCompareModal();
 }
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         if (document.getElementById('product-modal').style.display === 'block') {
             closeModal();
+        }
+        if (document.getElementById('compare-modal').style.display === 'block') {
+            closeCompareModal();
         }
         const mobileNav = document.getElementById('mobile-nav');
         if (mobileNav.classList.contains('open')) {
@@ -301,6 +313,109 @@ document.addEventListener('mousemove', (e) => {
     if (window.innerWidth > 768) {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
+    }
+});
+
+// --- Compare Feature ---
+window.toggleCompare = function(id) {
+    const idx = compareList.indexOf(id);
+    if (idx > -1) {
+        compareList.splice(idx, 1);
+    } else if (compareList.length < 3) {
+        compareList.push(id);
+    }
+    updateCompareTray();
+    renderCatalogue();
+};
+
+function updateCompareTray() {
+    const tray = document.getElementById('compare-tray');
+    const items = document.getElementById('compare-tray-items');
+    const count = document.getElementById('compare-count');
+    const btn = document.getElementById('compare-btn');
+
+    if (compareList.length === 0) {
+        tray.style.display = 'none';
+        return;
+    }
+
+    tray.style.display = 'block';
+    count.textContent = compareList.length;
+    btn.disabled = compareList.length < 2;
+
+    items.innerHTML = compareList.map(id => {
+        const p = products.find(prod => prod.id === id);
+        return `<img src="${p.image}" alt="${p.name}" title="${p.brand} — ${p.name}">`;
+    }).join('');
+}
+
+window.clearCompare = function() {
+    compareList = [];
+    updateCompareTray();
+    renderCatalogue();
+};
+
+window.openCompareModal = function() {
+    if (compareList.length < 2) return;
+    const modal = document.getElementById('compare-modal');
+    const body = document.getElementById('compare-body');
+    const items = compareList.map(id => products.find(p => p.id === id));
+
+    body.style.gridTemplateColumns = `repeat(${items.length}, 1fr)`;
+    body.innerHTML = items.map(p => {
+        const price = getDiscountedPrice(p);
+        const premiumLabel = p.premium ? '<span class="premium-badge" style="position:static; display:inline-block; font-size:0.55rem; padding:2px 6px; margin-bottom:0.5rem;">★ Premium</span>' : '';
+        return `
+            <div class="compare-column">
+                <img src="${p.image}" alt="${p.brand} ${p.name}">
+                ${premiumLabel}
+                <h3>${p.brand}</h3>
+                <h4>${p.name}</h4>
+                <div class="compare-row">
+                    <div class="compare-row-label">Price</div>
+                    <div class="compare-row-value price">₱${price.toLocaleString()}</div>
+                </div>
+                <div class="compare-row">
+                    <div class="compare-row-label">Category</div>
+                    <div class="compare-row-value">${p.category}</div>
+                </div>
+                <div class="compare-row">
+                    <div class="compare-row-label">Notes</div>
+                    <div class="compare-row-value">${p.notes}</div>
+                </div>
+                <div class="compare-row">
+                    <div class="compare-row-label">Description</div>
+                    <div class="compare-row-value" style="font-style:italic; font-size:0.8rem;">"${p.desc}"</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+};
+
+window.closeCompareModal = function() {
+    document.getElementById('compare-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+// --- Back to Top & Sticky Header ---
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('back-to-top');
+    if (window.scrollY > 400) {
+        btn.classList.add('visible');
+    } else {
+        btn.classList.remove('visible');
+    }
+
+    const header = document.querySelector('.catalogue-header');
+    if (header && document.getElementById('catalogue').classList.contains('active')) {
+        if (window.scrollY > 200) {
+            header.classList.add('sticky');
+        } else {
+            header.classList.remove('sticky');
+        }
     }
 });
 

@@ -51,10 +51,10 @@
                 </div>
                 <div class="filter-wrapper">
                     <div class="filter-bar" role="group" aria-label="Filter by category">
-                        <button class="filter-btn active" onclick="filterProducts('All')" aria-pressed="true">All</button>
-                        <button class="filter-btn" onclick="filterProducts('Men')" aria-pressed="false">Men</button>
-                        <button class="filter-btn" onclick="filterProducts('Women')" aria-pressed="false">Women</button>
-                        <button class="filter-btn" onclick="filterProducts('Unisex')" aria-pressed="false">Unisex</button>
+                        <button class="filter-btn active" data-category="All" onclick="filterProducts('All')" aria-pressed="true">All</button>
+                        <button class="filter-btn" data-category="Men" onclick="filterProducts('Men')" aria-pressed="false">Men</button>
+                        <button class="filter-btn" data-category="Women" onclick="filterProducts('Women')" aria-pressed="false">Women</button>
+                        <button class="filter-btn" data-category="Unisex" onclick="filterProducts('Unisex')" aria-pressed="false">Unisex</button>
                     </div>
                 </div>
                 <div class="controls-bar">
@@ -160,6 +160,24 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()" aria-label="Close" role="button" tabindex="0">&times;</span>
             <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <button id="back-to-top" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+    <div id="compare-tray" class="compare-tray" style="display:none;">
+        <div class="compare-tray-inner">
+            <span class="compare-tray-label">Compare (<span id="compare-count">0</span>/3)</span>
+            <div id="compare-tray-items" class="compare-tray-items"></div>
+            <button class="gold-btn compare-tray-btn" onclick="openCompareModal()" disabled id="compare-btn">Compare Now</button>
+            <button class="compare-tray-clear" onclick="clearCompare()" aria-label="Clear comparison">✕</button>
+        </div>
+    </div>
+
+    <div id="compare-modal" class="modal" role="dialog" aria-modal="true" aria-label="Compare fragrances">
+        <div class="modal-content compare-modal-content">
+            <span class="close" onclick="closeCompareModal()" aria-label="Close" role="button" tabindex="0">&times;</span>
+            <div id="compare-body" class="compare-body"></div>
         </div>
     </div>
 
