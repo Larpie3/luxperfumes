@@ -206,4 +206,108 @@ nav {
     .hero h1 { font-size: 2.5rem; }
     .grid { grid-template-columns: 1fr; }
     .filter-bar { gap: 1.5rem; justify-content: flex-start; }
+    .controls-bar { flex-direction: column; }
+}
+
+/* Loading States */
+.loader {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--gold);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 3rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Image Lazy Loading Optimization */
+.product-card img {
+    background: #f0f0f0;
+    min-height: 200px;
+    object-fit: contain;
+    transition: filter 0.3s;
+}
+
+.product-card img.loading {
+    filter: blur(10px);
+}
+
+.product-card img.loaded {
+    filter: blur(0);
+}
+
+/* Enhanced Mobile Menu */
+.mobile-nav-overlay {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.mobile-nav-overlay a {
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-overlay.open a {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.mobile-nav-overlay.open a:nth-child(2) { transition-delay: 0.1s; }
+.mobile-nav-overlay.open a:nth-child(3) { transition-delay: 0.2s; }
+.mobile-nav-overlay.open a:nth-child(4) { transition-delay: 0.3s; }
+
+/* Search Bar */
+.search-bar {
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+    padding: 0 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--border);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    background: var(--card-bg);
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-bar input:focus {
+    border-color: var(--gold);
+}
+
+/* Controls Bar (Sort + Price Filter) */
+.controls-bar {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 0 20px;
+}
+
+.sort-select,
+.price-filter-select {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    background: var(--card-bg);
+    color: var(--text-main);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.sort-select:focus,
+.price-filter-select:focus {
+    border-color: var(--gold);
 }

@@ -46,6 +46,9 @@
         <section id="catalogue" class="page">
             <header class="catalogue-header">
                 <h2>The Collection</h2>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search by brand, name, or notes..." oninput="searchProducts(this.value)">
+                </div>
                 <div class="filter-wrapper">
                     <div class="filter-bar" role="group" aria-label="Filter by category">
                         <button class="filter-btn active" onclick="filterProducts('All')" aria-pressed="true">All</button>
@@ -53,6 +56,21 @@
                         <button class="filter-btn" onclick="filterProducts('Women')" aria-pressed="false">Women</button>
                         <button class="filter-btn" onclick="filterProducts('Unisex')" aria-pressed="false">Unisex</button>
                     </div>
+                </div>
+                <div class="controls-bar">
+                    <select class="sort-select" onchange="sortProducts(this.value)">
+                        <option value="">Sort By</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="brand">Brand</option>
+                        <option value="name">Name</option>
+                    </select>
+                    <select class="price-filter-select" onchange="filterByPrice(this.value)">
+                        <option value="">All Prices</option>
+                        <option value="0-1000">Under ₱1,000</option>
+                        <option value="1000-1500">₱1,000 - ₱1,500</option>
+                        <option value="1500-Infinity">Above ₱1,500</option>
+                    </select>
                 </div>
             </header>
             

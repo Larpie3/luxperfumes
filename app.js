@@ -1,6 +1,9 @@
 import products, { BUNDLE_DISCOUNT_PERCENT } from './products.js';
 
 let currentCategory = 'All';
+let currentSearch = '';
+let currentPriceRange = '';
+let currentSort = '';
 
 window.showPage = function(pageId) {
     const pages = document.querySelectorAll('.page');
@@ -153,6 +156,21 @@ window.filterProducts = function(category) {
         clicked.classList.add('active');
         clicked.setAttribute('aria-pressed', 'true');
     }
+    renderCatalogue();
+};
+
+window.searchProducts = function(query) {
+    currentSearch = query;
+    renderCatalogue();
+};
+
+window.sortProducts = function(sortBy) {
+    currentSort = sortBy;
+    renderCatalogue();
+};
+
+window.filterByPrice = function(range) {
+    currentPriceRange = range;
     renderCatalogue();
 };
 
