@@ -92,12 +92,12 @@ function renderBundleBuilder() {
         let html = '<option value="">— Choose Fragrance —</option>';
         if (premiums.length > 0) {
             html += '<optgroup label="★ Premium">';
-            html += premiums.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+            html += premiums.map(p => `<option value="${p.id}">${escapeHtml(p.brand)} — ${escapeHtml(p.name)} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
             html += '</optgroup>';
         }
         if (standards.length > 0) {
             html += '<optgroup label="Standard">';
-            html += standards.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+            html += standards.map(p => `<option value="${p.id}">${escapeHtml(p.brand)} — ${escapeHtml(p.name)} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
             html += '</optgroup>';
         }
         return html;
@@ -407,7 +407,7 @@ function updateCompareTray() {
 
     items.innerHTML = compareList.map(id => {
         const p = products.find(prod => prod.id === id);
-        return `<img src="${p.image}" alt="${p.name}" title="${p.brand} — ${p.name}">`;
+        return `<img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" title="${escapeHtml(p.brand)} — ${escapeHtml(p.name)}">`;
     }).join('');
 }
 
