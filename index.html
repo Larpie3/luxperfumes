@@ -41,9 +41,22 @@
                     <button class="gold-btn" onclick="showPage('catalogue')">Enter Boutique</button>
                 </div>
             </div>
+            <div id="home-bundle-promo" class="bundle-promo home-bundle-promo" style="display:none;" onclick="showPage('catalogue'); setTimeout(()=>document.getElementById('bundle-section').scrollIntoView({behavior:'smooth'}),300)">
+                <span class="bundle-promo-badge">NEW</span>
+                <h3 class="bundle-promo-title">Discount Bundles Available</h3>
+                <p class="bundle-promo-text">Pair a <strong>Premium</strong> + <strong>Standard</strong> fragrance and save <span id="home-bundle-promo-pct"></span>% — build your perfect bundle in our Collection.</p>
+                <span class="bundle-promo-cta">Build Your Bundle →</span>
+            </div>
         </section>
 
         <section id="catalogue" class="page">
+            <div id="bundle-promo" class="bundle-promo" style="display:none;" onclick="document.getElementById('bundle-section').scrollIntoView({behavior:'smooth'})">
+                <span class="bundle-promo-badge">NEW</span>
+                <h3 class="bundle-promo-title">Discount Bundles Available</h3>
+                <p class="bundle-promo-text">Pair a <strong>Premium</strong> + <strong>Standard</strong> fragrance and save <span id="bundle-promo-pct"></span>% — build your perfect bundle below.</p>
+                <span class="bundle-promo-cta">Build Your Bundle ↓</span>
+            </div>
+
             <header class="catalogue-header">
                 <h2>The Collection</h2>
                 <div class="search-bar">
@@ -73,13 +86,6 @@
                     </select>
                 </div>
             </header>
-
-            <div id="bundle-promo" class="bundle-promo" style="display:none;" onclick="document.getElementById('bundle-section').scrollIntoView({behavior:'smooth'})">
-                <span class="bundle-promo-badge">NEW</span>
-                <h3 class="bundle-promo-title">Discount Bundles Available</h3>
-                <p class="bundle-promo-text">Pair a <strong>Premium</strong> + <strong>Standard</strong> fragrance and save <span id="bundle-promo-pct"></span>% — build your perfect bundle below.</p>
-                <span class="bundle-promo-cta">Build Your Bundle ↓</span>
-            </div>
 
             <div id="product-grid" class="grid"></div>
 
