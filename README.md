@@ -46,7 +46,12 @@ luxperfumes/
 ├── style.css           # Main stylesheet with custom properties
 ├── app.js              # Main application logic (ES6 modules)
 ├── products.js         # Product data export
-├── images/             # Product images (23 perfume images)
+├── v2/                 # Version 2 of the site
+│   ├── index.html      # V2 HTML entry point
+│   ├── style.css       # V2 stylesheet
+│   ├── app.js          # V2 application logic
+│   └── products.js     # V2 product data
+├── images/             # Product images (shared by both versions)
 │   ├── dior-sauvage.jpg
 │   ├── br540.jpg
 │   ├── aventus.jpg
@@ -95,6 +100,14 @@ luxperfumes/
 
 This is a static website with no build dependencies. Simply open `index.html` in a web browser or deploy to any static hosting service.
 
+### Accessing Version 2
+
+A second version of the site is located in the `v2/` folder. To access it:
+
+- **Local server**: Navigate to `http://localhost:8000/v2/` (e.g., `http://localhost:8000/v2/index.html`)
+- **GitHub Pages**: Visit `https://yourusername.github.io/luxperfumes/v2/`
+- **Direct file**: Open `v2/index.html` via your local server
+
 ## 🌐 Deployment
 
 ### GitHub Pages
@@ -130,7 +143,7 @@ The catalog includes **23 luxury fragrances** from prestigious brands:
 - **Parfums de Marly** - Delina
 - **Louis Vuitton** - Ombre Nomade
 - **Valentino** - Born In Roma
-- **Armani** - Acqua Di Gio
+- **Armani** - Acqua Di Gio, Acqua Di Gio Profondo, Acqua Di Gio Profumo
 
 ## 🎨 Color Palette
 

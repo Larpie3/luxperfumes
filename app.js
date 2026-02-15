@@ -1,5 +1,16 @@
 import products, { BUNDLE_DISCOUNT_PERCENT } from './products.js';
 
+// Generate a random promo discount between 10-15% for each user session
+function getUserPromoDiscount() {
+    let discount = sessionStorage.getItem('promoDiscount');
+    if (!discount) {
+        discount = Math.floor(Math.random() * 6) + 10; // 10 to 15
+        sessionStorage.setItem('promoDiscount', discount);
+    }
+    return Number(discount);
+}
+const USER_PROMO_DISCOUNT = getUserPromoDiscount();
+
 let currentCategory = 'All';
 let currentSearch = '';
 let currentPriceRange = '';
@@ -53,18 +64,18 @@ function renderBundleBuilder() {
     }
 
     bundleSection.style.display = 'block';
-    discountPct.textContent = BUNDLE_DISCOUNT_PERCENT;
+    discountPct.textContent = USER_PROMO_DISCOUNT;
 
     // Show and update the promo banner
     const promo = document.getElementById('bundle-promo');
     promo.style.display = 'block';
-    document.getElementById('bundle-promo-pct').textContent = BUNDLE_DISCOUNT_PERCENT;
+    document.getElementById('bundle-promo-pct').textContent = USER_PROMO_DISCOUNT;
 
     // Show and update the home page promo banner
     const homePromo = document.getElementById('home-bundle-promo');
     if (homePromo) {
         homePromo.style.display = 'block';
-        document.getElementById('home-bundle-promo-pct').textContent = BUNDLE_DISCOUNT_PERCENT;
+        document.getElementById('home-bundle-promo-pct').textContent = USER_PROMO_DISCOUNT;
     }
 
     // Populate premium select
@@ -91,7 +102,7 @@ window.updateBundleSummary = function() {
     const premiumProduct = products.find(p => p.id === premiumId);
     const standardProduct = products.find(p => p.id === standardId);
     const originalTotal = getDiscountedPrice(premiumProduct) + getDiscountedPrice(standardProduct);
-    const bundlePrice = Math.round(originalTotal * (1 - BUNDLE_DISCOUNT_PERCENT / 100));
+    const bundlePrice = Math.round(originalTotal * (1 - USER_PROMO_DISCOUNT / 100));
     const savings = originalTotal - bundlePrice;
 
     summary.innerHTML = `
@@ -110,8 +121,9 @@ window.updateBundleSummary = function() {
         <div class="bundle-pricing">
             <span class="original-price">₱${originalTotal.toLocaleString()}</span>
             <span class="bundle-price">₱${bundlePrice.toLocaleString()}</span>
-            <span class="bundle-savings">Save ₱${savings.toLocaleString()} (${BUNDLE_DISCOUNT_PERCENT}% off)</span>
+            <span class="bundle-savings">Save ₱${savings.toLocaleString()} (${USER_PROMO_DISCOUNT}% off)</span>
         </div>
+        <p class="bundle-screenshot-reminder">📸 Please screenshot your bundle selection before contacting us!</p>
         <button class="gold-btn" style="width:100%; margin-top:1rem; background:var(--text-main); color:#fff;"
             onclick="window.open('https://m.me/ralphcastanares.3')">
             Acquire Bundle via Concierge
