@@ -2,7 +2,7 @@ const products = [
   // --- AVAILABLE COLLECTION ---
   // To add a discount: set "discount" to a percentage (e.g. 10 = 10% off)
   // To mark as premium: set "premium" to true
-  // Bundles are auto-generated: any premium + standard (non-premium) pair gets a bundle discount
+  // Bundles are auto-generated: any two fragrances get a bundle discount
   {
     "id": "D001",
     "brand": "Dior",
