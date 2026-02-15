@@ -17,6 +17,19 @@ const products = [
     "discount": 0
   },
   {
+    "id": "D002",
+    "brand": "Dior",
+    "name": "Miss Dior Blooming Bouquet",
+    "category": "Women",
+    "price": 850,
+    "stock": 1,
+    "image": "images/miss-dior.jpg",
+    "desc": "A couture fragrance evoking a fresh bouquet of flowers, joyful and luminous.",
+    "notes": "Peony, Damascus Rose, White Musk",
+    "premium": false,
+    "discount": 0
+  },
+  {
     "id": "MFK001",
     "brand": "Maison Francis Kurkdjian",
     "name": "Baccarat Rouge 540",
@@ -197,6 +210,32 @@ const products = [
     "image": "images/eros.jpg",
     "desc": "Sublime masculinity through a luminous aura.",
     "notes": "Mint, Green Apple, Tonka Bean",
+    "premium": false,
+    "discount": 0
+  },
+  {
+    "id": "V002",
+    "brand": "Versace",
+    "name": "Eros Flame",
+    "category": "Men",
+    "price": 720,
+    "stock": 1,
+    "image": "images/eros-flame.jpg",
+    "desc": "A passionate and fiery interpretation of the iconic Eros fragrance.",
+    "notes": "Black Pepper, Chinotto, Rosemary, Geranium, Tonka Bean",
+    "premium": false,
+    "discount": 0
+  },
+  {
+    "id": "V003",
+    "brand": "Versace",
+    "name": "Eros Energy",
+    "category": "Men",
+    "price": 720,
+    "stock": 1,
+    "image": "images/eros-energy.jpg",
+    "desc": "An energizing and vibrant fragrance that captures youthful dynamism.",
+    "notes": "Kiwi, Lemon, Mint, Clary Sage, Cedarwood",
     "premium": false,
     "discount": 0
   },

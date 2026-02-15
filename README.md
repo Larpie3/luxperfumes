@@ -46,7 +46,7 @@ luxperfumes/
 ├── style.css           # Main stylesheet with custom properties
 ├── app.js              # Main application logic (ES6 modules)
 ├── products.js         # Product data export
-├── images/             # Product images (21 perfume images)
+├── images/             # Product images (23 perfume images)
 │   ├── dior-sauvage.jpg
 │   ├── br540.jpg
 │   ├── aventus.jpg
@@ -114,9 +114,9 @@ This is a static website with no build dependencies. Simply open `index.html` in
 
 ## 📦 Products Featured
 
-The catalog includes **20 luxury fragrances** from prestigious brands:
+The catalog includes **23 luxury fragrances** from prestigious brands:
 
-- **Dior** - Sauvage EDP
+- **Dior** - Sauvage EDP, Miss Dior Blooming Bouquet
 - **Maison Francis Kurkdjian** - Baccarat Rouge 540
 - **Creed** - Aventus
 - **Tom Ford** - Lost Cherry, Tobacco Vanille, Oud Wood
@@ -125,7 +125,7 @@ The catalog includes **20 luxury fragrances** from prestigious brands:
 - **Jo Malone** - English Pear & Freesia, Wood Sage & Sea Salt
 - **Prada** - Paradoxe
 - **Le Labo** - Santal 33
-- **Versace** - Eros
+- **Versace** - Eros, Eros Flame, Eros Energy
 - **Carolina Herrera** - Good Girl
 - **Parfums de Marly** - Delina
 - **Louis Vuitton** - Ombre Nomade
