@@ -437,6 +437,8 @@ window.addEventListener('scroll', () => {
 // --- Sticky header hover-reveal ---
 (function() {
     const trigger = document.getElementById('sticky-trigger');
+    const catalogueHeader = document.querySelector('.catalogue-header');
+    const nav = document.querySelector('nav');
     const getHeader = () => document.querySelector('.catalogue-header.sticky');
     let hideTimeout;
 
@@ -453,16 +455,20 @@ window.addEventListener('scroll', () => {
         }, 300);
     }
 
-    trigger.addEventListener('mouseenter', showStickyHeader);
-    trigger.addEventListener('mouseleave', scheduleStickyHide);
+    if (trigger) {
+        trigger.addEventListener('mouseenter', showStickyHeader);
+        trigger.addEventListener('mouseleave', scheduleStickyHide);
+    }
 
-    // Main nav bar also triggers the dropdown
-    const nav = document.querySelector('nav');
-    nav.addEventListener('mouseenter', showStickyHeader);
-    nav.addEventListener('mouseleave', scheduleStickyHide);
+    if (nav) {
+        nav.addEventListener('mouseenter', showStickyHeader);
+        nav.addEventListener('mouseleave', scheduleStickyHide);
+    }
 
-    document.querySelector('.catalogue-header').addEventListener('mouseenter', showStickyHeader);
-    document.querySelector('.catalogue-header').addEventListener('mouseleave', scheduleStickyHide);
+    if (catalogueHeader) {
+        catalogueHeader.addEventListener('mouseenter', showStickyHeader);
+        catalogueHeader.addEventListener('mouseleave', scheduleStickyHide);
+    }
 })();
 
 showPage('home');
