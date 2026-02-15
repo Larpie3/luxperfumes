@@ -10,6 +10,7 @@ function getUserPromoDiscount() {
     return Number(discount);
 }
 const USER_PROMO_DISCOUNT = getUserPromoDiscount();
+const LOW_STOCK_THRESHOLD = 3;
 
 function escapeHtml(str) {
     const div = document.createElement('div');
@@ -22,6 +23,7 @@ let currentSearch = '';
 let currentPriceRange = '';
 let currentSort = '';
 let compareList = [];
+let currentScent = '';
 
 window.showPage = function(pageId) {
     const pages = document.querySelectorAll('.page');
@@ -187,6 +189,10 @@ function renderCatalogue() {
         });
     }
 
+    if (currentScent) {
+        filtered = filtered.filter(p => p.topScent === currentScent);
+    }
+
     if (currentSort) {
         switch (currentSort) {
             case 'price-low': filtered.sort((a, b) => getDiscountedPrice(a) - getDiscountedPrice(b)); break;
@@ -221,6 +227,7 @@ function renderCatalogue() {
 
 function createCard(p, isArchive = false) {
     const premiumBadge = p.premium ? '<span class="premium-badge">★ Premium</span>' : '';
+    const stockBadge = (p.stock <= LOW_STOCK_THRESHOLD && p.stock > 0) ? `<span class="stock-badge${p.stock === 1 ? ' stock-badge-last' : ''}">Only ${escapeHtml(String(p.stock))} left</span>` : '';
     const hasDiscount = p.discount > 0 && p.stock > 0;
     const discountedPrice = getDiscountedPrice(p);
     const isCompared = compareList.includes(p.id);
@@ -245,6 +252,7 @@ function createCard(p, isArchive = false) {
     return `
         <div class="product-card" onclick="openModal('${p.id}')">
             ${premiumBadge}
+            ${stockBadge}
             ${compareBtn}
             <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" loading="lazy">
             <h3>${escapeHtml(p.brand)}</h3>
@@ -281,6 +289,11 @@ window.sortProducts = function(sortBy) {
 
 window.filterByPrice = function(range) {
     currentPriceRange = range;
+    renderCatalogue();
+};
+
+window.filterByScent = function(scent) {
+    currentScent = scent;
     renderCatalogue();
 };
 
@@ -464,6 +477,7 @@ window.closeCompareModal = function() {
 };
 
 // --- Back to Top & Sticky Header ---
+let lastScrollY = window.scrollY;
 window.addEventListener('scroll', () => {
     const btn = document.getElementById('back-to-top');
     if (window.scrollY > 400) {
@@ -478,6 +492,14 @@ window.addEventListener('scroll', () => {
         if (window.scrollY > 200) {
             header.classList.add('sticky');
             trigger.style.display = 'block';
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                if (window.scrollY < lastScrollY) {
+                    header.classList.add('visible');
+                } else {
+                    header.classList.remove('visible');
+                }
+            }
         } else {
             header.classList.remove('sticky');
             header.classList.remove('visible');
@@ -486,6 +508,7 @@ window.addEventListener('scroll', () => {
     } else {
         if (trigger) trigger.style.display = 'none';
     }
+    lastScrollY = window.scrollY;
 });
 
 // --- Sticky header hover-reveal ---
@@ -522,6 +545,18 @@ window.addEventListener('scroll', () => {
     if (catalogueHeader) {
         catalogueHeader.addEventListener('mouseenter', showStickyHeader);
         catalogueHeader.addEventListener('mouseleave', scheduleStickyHide);
+    }
+
+    // Mobile tap on nav to toggle sticky header
+    if (nav) {
+        nav.addEventListener('click', (e) => {
+            if (window.innerWidth > 768) return;
+            if (e.target.closest('.mobile-menu-icon') || e.target.closest('a')) return;
+            const header = getHeader();
+            if (header) {
+                header.classList.toggle('visible');
+            }
+        });
     }
 })();
 
