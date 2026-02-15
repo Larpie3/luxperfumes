@@ -47,7 +47,7 @@
             <header class="catalogue-header">
                 <h2>The Collection</h2>
                 <div class="search-bar">
-                    <input type="text" placeholder="Search by brand, name, or notes..." oninput="searchProducts(this.value)">
+                    <input type="text" placeholder="Search by brand, name, or notes..." oninput="searchProducts(this.value)" onkeydown="if(event.key==='Enter'){searchProducts(this.value); this.blur();}">
                 </div>
                 <div class="filter-wrapper">
                     <div class="filter-bar" role="group" aria-label="Filter by category">
@@ -77,9 +77,24 @@
             <div id="product-grid" class="grid"></div>
 
             <div id="bundle-section" class="bundle-section" style="display:none;">
-                <h2 class="bundle-heading">Exclusive Bundles</h2>
-                <p class="bundle-subheading">Pair a Premium fragrance with a Standard selection and save</p>
-                <div id="bundle-grid" class="bundle-grid"></div>
+                <h2 class="bundle-heading">Build Your Bundle</h2>
+                <p class="bundle-subheading">Choose one Premium and one Standard fragrance to save <span id="bundle-discount-pct"></span>%</p>
+                <div class="bundle-builder">
+                    <div class="bundle-pick-group">
+                        <label class="bundle-pick-label">Select Premium Fragrance</label>
+                        <select id="bundle-premium-select" class="bundle-select" onchange="updateBundleSummary()">
+                            <option value="">— Choose a Premium —</option>
+                        </select>
+                    </div>
+                    <span class="bundle-plus-icon">+</span>
+                    <div class="bundle-pick-group">
+                        <label class="bundle-pick-label">Select Standard Fragrance</label>
+                        <select id="bundle-standard-select" class="bundle-select" onchange="updateBundleSummary()">
+                            <option value="">— Choose a Standard —</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="bundle-summary" class="bundle-summary" style="display:none;"></div>
             </div>
 
             <div class="archive-section">
