@@ -251,6 +251,7 @@ nav {
 .bundle-pricing { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
 .bundle-price { font-family: 'Cormorant Garamond'; font-size: 1.5rem; color: var(--gold); font-weight: 700; }
 .bundle-savings { font-size: 0.75rem; color: #27ae60; letter-spacing: 0.5px; }
+.bundle-screenshot-reminder { font-size: 0.8rem; color: var(--gold); letter-spacing: 0.5px; margin-top: 1rem; font-weight: 500; font-style: italic; }
 .bundle-plus { font-family: 'Cormorant Garamond'; font-size: 1.5rem; color: var(--gold); }
 
 .archive-section { border-top: 1px solid var(--border); margin: 0 5%; padding: 2rem 0; }

@@ -303,6 +303,32 @@ const products = [
     "notes": "Marine Notes, Bergamot, Cedar",
     "premium": false,
     "discount": 0
+  },
+  {
+    "id": "AR002",
+    "brand": "Armani",
+    "name": "Acqua Di Gio Profondo",
+    "category": "Men",
+    "price": 850,
+    "stock": 1,
+    "image": "images/adg-profondo.jpg",
+    "desc": "An intense, deep aquatic fragrance inspired by the depths of the ocean.",
+    "notes": "Aquatic Notes, Amber, Patchouli, Musk",
+    "premium": false,
+    "discount": 0
+  },
+  {
+    "id": "AR003",
+    "brand": "Armani",
+    "name": "Acqua Di Gio Profumo",
+    "category": "Men",
+    "price": 850,
+    "stock": 1,
+    "image": "images/adg-profumo.jpg",
+    "desc": "A refined and sophisticated evolution of the iconic Acqua Di Gio.",
+    "notes": "Bergamot, Geranium, Incense, Amber, Patchouli",
+    "premium": false,
+    "discount": 0
   }
 ];
 
