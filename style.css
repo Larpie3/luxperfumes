@@ -152,6 +152,13 @@ nav {
     padding: 4px 8px; border-radius: 2px;
     z-index: 4;
 }
+.stock-badge-last {
+    animation: flash-red 1.5s ease-in-out infinite;
+}
+@keyframes flash-red {
+    0%, 100% { background: #c0392b; }
+    50% { background: #e74c3c; box-shadow: 0 0 8px rgba(231, 76, 60, 0.6); }
+}
 .original-price { color: #999; text-decoration: line-through; font-size: 0.9rem; margin-right: 0.5rem; }
 
 .bundle-section { padding: 2rem 5% 4rem; text-align: center; }

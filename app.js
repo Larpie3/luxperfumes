@@ -228,7 +228,7 @@ function renderCatalogue() {
 
 function createCard(p, isArchive = false) {
     const premiumBadge = p.premium ? '<span class="premium-badge">★ Premium</span>' : '';
-    const stockBadge = (p.stock <= LOW_STOCK_THRESHOLD && p.stock > 0) ? `<span class="stock-badge">Only ${escapeHtml(String(p.stock))} left</span>` : '';
+    const stockBadge = (p.stock <= LOW_STOCK_THRESHOLD && p.stock > 0) ? `<span class="stock-badge${p.stock === 1 ? ' stock-badge-last' : ''}">Only ${escapeHtml(String(p.stock))} left</span>` : '';
     const hasDiscount = p.discount > 0 && p.stock > 0;
     const discountedPrice = getDiscountedPrice(p);
     const isCompared = compareList.includes(p.id);
