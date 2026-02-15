@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Scent Privé — Premium Perfume Boutique</title>
+    <meta name="description" content="Luxe Scent Privé — A curated collection of luxury perfumes from world-renowned brands including Dior, Creed, Tom Ford, and more.">
+    <meta name="theme-color" content="#C5A059">
+    <meta property="og:title" content="Luxe Scent Privé — Premium Perfume Boutique">
+    <meta property="og:description" content="A curated anthology of the world's most prestigious essences.">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="custom-cursor"></div>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="logo">LUXE SCENT PRIVÉ</div>
+        <div class="nav-links">
+            <a href="#" onclick="showPage('home')" class="nav-link active" data-page="home">Home</a>
+            <a href="#" onclick="showPage('catalogue')" class="nav-link" data-page="catalogue">Collection</a>
+            <a href="#" onclick="showPage('about')" class="nav-link" data-page="about">Heritage</a>
+        </div>
+        <div class="mobile-menu-icon" onclick="toggleMobileMenu()" aria-label="Open menu" role="button" tabindex="0">☰</div>
+    </nav>
+
+    <div class="mobile-nav-overlay" id="mobile-nav" role="dialog" aria-label="Mobile navigation">
+        <span class="close-nav" onclick="toggleMobileMenu()" aria-label="Close menu" role="button" tabindex="0">&times;</span>
+        <a href="#" onclick="showPage('home'); toggleMobileMenu()">Home</a>
+        <a href="#" onclick="showPage('catalogue'); toggleMobileMenu()">Collection</a>
+        <a href="#" onclick="showPage('about'); toggleMobileMenu()">Heritage</a>
+    </div>
+
+    <main id="content">
+        <section id="home" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>The Art of Olfaction</h1>
+                    <p>A curated anthology of the world's most prestigious essences.</p>
+                    <p class="hero-owner">By Ralph Castanares</p>
+                    <button class="gold-btn" onclick="showPage('catalogue')">Enter Boutique</button>
+                </div>
+            </div>
+            <div id="home-bundle-promo" class="bundle-promo home-bundle-promo" style="display:none;" onclick="showPage('catalogue'); setTimeout(()=>document.getElementById('bundle-section').scrollIntoView({behavior:'smooth'}),300)">
+                <span class="bundle-promo-badge">NEW</span>
+                <h3 class="bundle-promo-title">Discount Bundles Available</h3>
+                <p class="bundle-promo-text">Pair any <strong>two fragrances</strong> and save <span id="home-bundle-promo-pct"></span>% — build your perfect bundle in our Collection.</p>
+                <span class="bundle-promo-cta">Build Your Bundle →</span>
+            </div>
+        </section>
+
+        <section id="catalogue" class="page">
+            <div id="bundle-promo" class="bundle-promo" style="display:none;" onclick="document.getElementById('bundle-section').scrollIntoView({behavior:'smooth'})">
+                <span class="bundle-promo-badge">NEW</span>
+                <h3 class="bundle-promo-title">Discount Bundles Available</h3>
+                <p class="bundle-promo-text">Pair any <strong>two fragrances</strong> and save <span id="bundle-promo-pct"></span>% — build your perfect bundle below.</p>
+                <span class="bundle-promo-cta">Build Your Bundle ↓</span>
+            </div>
+
+            <header class="catalogue-header">
+                <h2>The Collection</h2>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search by brand, name, or notes..." oninput="searchProducts(this.value)" onkeydown="if(event.key==='Enter'){searchProducts(this.value); this.blur();}">
+                </div>
+                <div class="filter-wrapper">
+                    <div class="filter-bar" role="group" aria-label="Filter by category">
+                        <button class="filter-btn active" data-category="All" onclick="filterProducts('All')" aria-pressed="true">All</button>
+                        <button class="filter-btn" data-category="Men" onclick="filterProducts('Men')" aria-pressed="false">Men</button>
+                        <button class="filter-btn" data-category="Women" onclick="filterProducts('Women')" aria-pressed="false">Women</button>
+                        <button class="filter-btn" data-category="Unisex" onclick="filterProducts('Unisex')" aria-pressed="false">Unisex</button>
+                    </div>
+                </div>
+                <div class="controls-bar">
+                    <select class="sort-select" onchange="sortProducts(this.value)">
+                        <option value="">Sort By</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="brand">Brand</option>
+                        <option value="name">Name</option>
+                    </select>
+                    <select class="price-filter-select" onchange="filterByPrice(this.value)">
+                        <option value="">All Prices</option>
+                        <option value="0-1000">Under ₱1,000</option>
+                        <option value="1000-1500">₱1,000 - ₱1,500</option>
+                        <option value="1500-Infinity">Above ₱1,500</option>
+                    </select>
+                </div>
+            </header>
+
+            <div id="product-grid" class="grid"></div>
+
+            <div id="bundle-section" class="bundle-section" style="display:none;">
+                <h2 class="bundle-heading">Build Your Bundle</h2>
+                <p class="bundle-subheading">Choose any two fragrances to save <span id="bundle-discount-pct"></span>%</p>
+                <div class="bundle-builder">
+                    <div class="bundle-pick-group">
+                        <label class="bundle-pick-label">Select First Fragrance</label>
+                        <select id="bundle-select-1" class="bundle-select" onchange="updateBundleSummary()">
+                            <option value="">— Choose Fragrance —</option>
+                        </select>
+                    </div>
+                    <span class="bundle-plus-icon">+</span>
+                    <div class="bundle-pick-group">
+                        <label class="bundle-pick-label">Select Second Fragrance</label>
+                        <select id="bundle-select-2" class="bundle-select" onchange="updateBundleSummary()">
+                            <option value="">— Choose Fragrance —</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="bundle-summary" class="bundle-summary" style="display:none;"></div>
+            </div>
+
+            <div class="archive-section">
+                <button class="archive-toggle" onclick="toggleArchive()" aria-expanded="false" aria-controls="archive-container">
+                    <span>Archived Collection (Unavailable)</span>
+                    <span id="archive-icon" aria-hidden="true">+</span>
+                </button>
+                <div id="archive-container" class="archive-container" role="region" aria-label="Archived products">
+                    <div id="archive-grid" class="grid opacity-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="page">
+            <div class="about-container">
+                <h2>The Heritage</h2>
+                <p class="heritage-tagline">"Where every drop tells a story of timeless elegance."</p>
+                <p><span class="heritage-highlight">Luxe Scent Privé</span> stands as a bastion of timeless elegance. We do not merely sell fragrance — we curate <span class="heritage-highlight">memories</span>, <span class="heritage-highlight">emotions</span>, and <span class="heritage-highlight">invisible signatures</span> that define who you are.</p>
+                <p>Founded on a passion for the world's most <span class="heritage-highlight">prestigious perfume houses</span>, our collection is carefully selected from iconic maisons such as <span class="heritage-highlight">Dior</span>, <span class="heritage-highlight">Creed</span>, <span class="heritage-highlight">Tom Ford</span>, <span class="heritage-highlight">Maison Francis Kurkdjian</span>, and more. Each bottle we offer carries a legacy of artistry and craftsmanship passed down through generations.</p>
+                <p>We believe that fragrance is the most <span class="heritage-highlight">intimate form of self-expression</span> — an invisible accessory that speaks louder than words. Our mission is to bring these rare, luxurious scents within reach, offering an experience that is personal, exclusive, and unforgettable.</p>
+                <div class="heritage-values">
+                    <div class="heritage-value">
+                        <h3>Authenticity</h3>
+                        <p>Every fragrance in our collection is sourced from trusted, verified suppliers to ensure genuine quality.</p>
+                    </div>
+                    <div class="heritage-value">
+                        <h3>Curation</h3>
+                        <p>We hand-pick only the finest scents from the most revered perfume houses around the world.</p>
+                    </div>
+                    <div class="heritage-value">
+                        <h3>Experience</h3>
+                        <p>From discovery to delivery, we provide a seamless and personal boutique experience.</p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <a href="https://m.me/ralphcastanares.3" target="_blank" class="gold-link">Contact Concierge</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">LUXE SCENT PRIVÉ</div>
+            <p class="footer-owner">By Ralph Castanares</p>
+            <p class="footer-tagline">A curated anthology of the world's most prestigious essences.</p>
+            <div class="footer-links">
+                <a href="#" onclick="showPage('home')">Home</a>
+                <a href="#" onclick="showPage('catalogue')">Collection</a>
+                <a href="#" onclick="showPage('about')">Heritage</a>
+                <a href="https://m.me/ralphcastanares.3" target="_blank" rel="noopener noreferrer">Concierge</a>
+            </div>
+            <p class="footer-copy">&copy; 2025 Luxe Scent Privé. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="product-modal" class="modal" role="dialog" aria-modal="true" aria-label="Product details">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()" aria-label="Close" role="button" tabindex="0">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <button id="back-to-top" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+    <div id="sticky-trigger"></div>
+
+    <div id="compare-tray" class="compare-tray" style="display:none;">
+        <div class="compare-tray-inner">
+            <span class="compare-tray-label">Compare (<span id="compare-count">0</span>/3)</span>
+            <div id="compare-tray-items" class="compare-tray-items"></div>
+            <button class="gold-btn compare-tray-btn" onclick="openCompareModal()" disabled id="compare-btn">Compare Now</button>
+            <button class="compare-tray-clear" onclick="clearCompare()" aria-label="Clear comparison">✕</button>
+        </div>
+    </div>
+
+    <div id="compare-modal" class="modal" role="dialog" aria-modal="true" aria-label="Compare fragrances">
+        <div class="modal-content compare-modal-content">
+            <span class="close" onclick="closeCompareModal()" aria-label="Close" role="button" tabindex="0">&times;</span>
+            <div id="compare-body" class="compare-body"></div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
