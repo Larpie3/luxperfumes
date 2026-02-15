@@ -148,7 +148,7 @@ nav {
     box-shadow: 0 10px 40px rgba(0,0,0,0.08);
 }
 .bundle-promo.home-bundle-promo:hover {
-    transform: translateX(-50%) translateY(-3px);
+    transform: translate(-50%, -3px);
 }
 
 #catalogue > .bundle-promo {
