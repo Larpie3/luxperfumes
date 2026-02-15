@@ -20,6 +20,7 @@ function escapeHtml(str) {
 let currentCategory = 'All';
 let currentSearch = '';
 let currentPriceRange = '';
+let currentScent = '';
 let currentSort = '';
 let compareList = [];
 
@@ -187,6 +188,10 @@ function renderCatalogue() {
         });
     }
 
+    if (currentScent) {
+        filtered = filtered.filter(p => p.topScent === currentScent);
+    }
+
     if (currentSort) {
         switch (currentSort) {
             case 'price-low': filtered.sort((a, b) => getDiscountedPrice(a) - getDiscountedPrice(b)); break;
@@ -221,6 +226,7 @@ function renderCatalogue() {
 
 function createCard(p, isArchive = false) {
     const premiumBadge = p.premium ? '<span class="premium-badge">★ Premium</span>' : '';
+    const stockBadge = (p.stock <= 3 && p.stock > 0) ? `<span class="stock-badge">Only ${escapeHtml(String(p.stock))} left</span>` : '';
     const hasDiscount = p.discount > 0 && p.stock > 0;
     const discountedPrice = getDiscountedPrice(p);
     const isCompared = compareList.includes(p.id);
@@ -245,6 +251,7 @@ function createCard(p, isArchive = false) {
     return `
         <div class="product-card" onclick="openModal('${p.id}')">
             ${premiumBadge}
+            ${stockBadge}
             ${compareBtn}
             <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" loading="lazy">
             <h3>${escapeHtml(p.brand)}</h3>
@@ -281,6 +288,11 @@ window.sortProducts = function(sortBy) {
 
 window.filterByPrice = function(range) {
     currentPriceRange = range;
+    renderCatalogue();
+};
+
+window.filterByScent = function(scent) {
+    currentScent = scent;
     renderCatalogue();
 };
 
