@@ -32,13 +32,13 @@ function generateBundles(availableProducts) {
     const standards = availableProducts.filter(p => !p.premium);
     const bundles = [];
 
-    premiums.forEach(prem => {
-        standards.forEach(std => {
-            const originalTotal = prem.price + std.price;
+    premiums.forEach(premiumProduct => {
+        standards.forEach(standardProduct => {
+            const originalTotal = getDiscountedPrice(premiumProduct) + getDiscountedPrice(standardProduct);
             const bundlePrice = Math.round(originalTotal * (1 - BUNDLE_DISCOUNT_PERCENT / 100));
             bundles.push({
-                premium: prem,
-                standard: std,
+                premium: premiumProduct,
+                standard: standardProduct,
                 originalTotal,
                 bundlePrice,
                 savings: originalTotal - bundlePrice
