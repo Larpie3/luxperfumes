@@ -1,11 +1,5 @@
 import products from './products.js';
 
-const CONFIG = {
-    whatsappNumber: '639219398475',
-    currency: '₱',
-    businessName: 'Luxe Scent Privé'
-};
-
 let currentCategory = 'All';
 let currentSearch = '';
 let currentPriceRange = '';
@@ -164,8 +158,8 @@ window.openModal = function(id) {
                 </p>
 
                 <button class="gold-btn" style="width: 100%; background: ${p.stock > 0 ? 'var(--text-main)' : 'transparent'}; color: ${p.stock > 0 ? '#fff' : 'var(--text-main)'};" 
-                onclick="window.open('https://wa.me/${CONFIG.whatsappNumber}?text=Inquiry for ${encodeURIComponent(p.name)}')">
-                    ${p.stock > 0 ? 'Acquire via WhatsApp' : 'Join Waitlist'}
+                onclick="window.open('https://m.me/ralphcastanares.3')">
+                    ${p.stock > 0 ? 'Acquire via Concierge' : 'Join Waitlist'}
                 </button>
             </div>
         `;
