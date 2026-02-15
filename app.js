@@ -1,4 +1,4 @@
-import products from './products.js';
+import products, { BUNDLE_DISCOUNT_PERCENT } from './products.js';
 
 let currentCategory = 'All';
 let currentSearch = '';
@@ -6,23 +6,19 @@ let currentPriceRange = '';
 let currentSort = '';
 
 window.showPage = function(pageId) {
-    try {
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(p => p.classList.remove('active'));
-        
-        const page = document.getElementById(pageId);
-        if (!page) {
-            throw new Error('Page not found: ' + pageId);
-        }
-        page.classList.add('active');
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(p => p.classList.remove('active'));
+    
+    document.getElementById(pageId).classList.add('active');
 
-        if(pageId === 'catalogue') {
-            renderCatalogue();
-        }
-    } catch (error) {
-        console.error('Error showing page:', error);
+    document.querySelectorAll('.nav-link').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === pageId);
+    });
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if(pageId === 'catalogue') {
+        renderCatalogue();
     }
 };
 
@@ -31,50 +27,43 @@ window.toggleMobileMenu = function() {
     nav.classList.toggle('open');
 };
 
-function getFilteredProducts() {
-    let filtered = currentCategory === 'All'
-        ? [...products]
-        : products.filter(p => p.category === currentCategory);
-
-    if (currentSearch) {
-        const searchTerm = currentSearch.toLowerCase();
-        filtered = filtered.filter(p =>
-            p.name.toLowerCase().includes(searchTerm) ||
-            p.brand.toLowerCase().includes(searchTerm) ||
-            p.notes.toLowerCase().includes(searchTerm)
-        );
+function getDiscountedPrice(p) {
+    if (p.discount > 0) {
+        return Math.round(p.price * (1 - p.discount / 100));
     }
+    return p.price;
+}
 
-    if (currentPriceRange) {
-        const [min, max] = currentPriceRange.split('-').map(v => v === 'Infinity' ? Infinity : Number(v));
-        filtered = filtered.filter(p => p.price >= min && p.price < max);
-    }
+function generateBundles(availableProducts) {
+    const premiums = availableProducts.filter(p => p.premium);
+    const standards = availableProducts.filter(p => !p.premium);
+    const bundles = [];
 
-    if (currentSort) {
-        switch (currentSort) {
-            case 'price-low':
-                filtered.sort((a, b) => a.price - b.price);
-                break;
-            case 'price-high':
-                filtered.sort((a, b) => b.price - a.price);
-                break;
-            case 'brand':
-                filtered.sort((a, b) => a.brand.localeCompare(b.brand));
-                break;
-            case 'name':
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
-                break;
-        }
-    }
+    premiums.forEach(premiumProduct => {
+        standards.forEach(standardProduct => {
+            const originalTotal = getDiscountedPrice(premiumProduct) + getDiscountedPrice(standardProduct);
+            const bundlePrice = Math.round(originalTotal * (1 - BUNDLE_DISCOUNT_PERCENT / 100));
+            bundles.push({
+                premium: premiumProduct,
+                standard: standardProduct,
+                originalTotal,
+                bundlePrice,
+                savings: originalTotal - bundlePrice
+            });
+        });
+    });
 
-    return filtered;
+    return bundles;
 }
 
 function renderCatalogue() {
     const mainGrid = document.getElementById('product-grid');
     const archiveGrid = document.getElementById('archive-grid');
-
-    const filtered = getFilteredProducts();
+    const bundleGrid = document.getElementById('bundle-grid');
+    
+    let filtered = currentCategory === 'All' 
+        ? products 
+        : products.filter(p => p.category === currentCategory);
 
     const available = filtered.filter(p => p.stock > 0);
     const archived = filtered.filter(p => p.stock === 0);
@@ -86,25 +75,87 @@ function renderCatalogue() {
     }
 
     archiveGrid.innerHTML = archived.map(p => createCard(p, true)).join('');
+
+    // Render bundles
+    const allAvailable = products.filter(p => p.stock > 0);
+    const bundles = generateBundles(allAvailable);
+    if (bundleGrid) {
+        if (bundles.length > 0) {
+            bundleGrid.innerHTML = bundles.map(b => createBundleCard(b)).join('');
+            document.getElementById('bundle-section').style.display = 'block';
+        } else {
+            document.getElementById('bundle-section').style.display = 'none';
+        }
+    }
 }
 
 function createCard(p, isArchive = false) {
+    const premiumBadge = p.premium ? '<span class="premium-badge">★ Premium</span>' : '';
+    const hasDiscount = p.discount > 0 && p.stock > 0;
+    const discountedPrice = getDiscountedPrice(p);
+
+    let priceHtml;
+    if (isArchive) {
+        priceHtml = '<span class="price" style="color:#999; font-size:0.8rem; letter-spacing:1px;">UNAVAILABLE</span>';
+    } else if (hasDiscount) {
+        priceHtml = `
+            <span class="discount-badge">-${p.discount}%</span>
+            <span class="price"><s class="original-price">₱${p.price.toLocaleString()}</s> ₱${discountedPrice.toLocaleString()}</span>
+        `;
+    } else {
+        priceHtml = `<span class="price">₱${p.price.toLocaleString()}</span>`;
+    }
+
     return `
         <div class="product-card" onclick="openModal('${p.id}')">
-            <img src="${p.image}" alt="${p.brand} ${p.name} - ${p.category} perfume" loading="lazy" onload="this.classList.add('loaded')" class="loading">
+            ${premiumBadge}
+            <img src="${p.image}" alt="${p.name}" loading="lazy">
             <h3>${p.brand}</h3>
             <p>${p.name}</p>
-            ${!isArchive 
-                ? `<span class="price">₱${p.price.toLocaleString()}</span>` 
-                : '<span class="price" style="color:#999; font-size:0.8rem; letter-spacing:1px;">UNAVAILABLE</span>'}
+            ${priceHtml}
+        </div>
+    `;
+}
+
+function createBundleCard(b) {
+    return `
+        <div class="bundle-card">
+            <div class="bundle-items">
+                <div class="bundle-item" onclick="openModal('${b.premium.id}')">
+                    <img src="${b.premium.image}" alt="${b.premium.name}">
+                    <span class="premium-badge">★ Premium</span>
+                    <p>${b.premium.brand} — ${b.premium.name}</p>
+                </div>
+                <span class="bundle-plus">+</span>
+                <div class="bundle-item" onclick="openModal('${b.standard.id}')">
+                    <img src="${b.standard.image}" alt="${b.standard.name}">
+                    <p>${b.standard.brand} — ${b.standard.name}</p>
+                </div>
+            </div>
+            <div class="bundle-pricing">
+                <span class="original-price">₱${b.originalTotal.toLocaleString()}</span>
+                <span class="bundle-price">₱${b.bundlePrice.toLocaleString()}</span>
+                <span class="bundle-savings">Save ₱${b.savings.toLocaleString()} (${BUNDLE_DISCOUNT_PERCENT}% off)</span>
+            </div>
+            <button class="gold-btn" style="width:100%; margin-top:1rem; background:var(--text-main); color:#fff;"
+                onclick="window.open('https://m.me/ralphcastanares.3')">
+                Acquire Bundle via Concierge
+            </button>
         </div>
     `;
 }
 
 window.filterProducts = function(category) {
     currentCategory = category;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+    });
+    const clicked = document.querySelector(`.filter-btn[onclick*="'${category}'"]`);
+    if (clicked) {
+        clicked.classList.add('active');
+        clicked.setAttribute('aria-pressed', 'true');
+    }
     renderCatalogue();
 };
 
@@ -126,49 +177,59 @@ window.filterByPrice = function(range) {
 window.toggleArchive = function() {
     const container = document.getElementById('archive-container');
     const icon = document.getElementById('archive-icon');
+    const toggle = document.querySelector('.archive-toggle');
     container.classList.toggle('open');
-    icon.textContent = container.classList.contains('open') ? '−' : '+';
+    const isOpen = container.classList.contains('open');
+    icon.textContent = isOpen ? '−' : '+';
+    toggle.setAttribute('aria-expanded', isOpen);
 };
 
 window.openModal = function(id) {
-    try {
-        const p = products.find(prod => prod.id === id);
-        if (!p) {
-            throw new Error('Product not found');
-        }
-        const modal = document.getElementById('product-modal');
-        const body = document.getElementById('modal-body');
-        
-        body.innerHTML = `
-            <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
-                <img src="${p.image}" alt="${p.brand} ${p.name} - ${p.category} perfume" style="max-width: 100%; max-height: 400px; object-fit: contain; mix-blend-mode: multiply;">
-            </div>
-            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px;">${p.brand}</h2>
-                <h3 style="font-size: 1.2rem; font-weight: 300; margin-bottom: 1.5rem; color:#444;">${p.name}</h3>
-                <p style="font-style: italic; color: #666; margin-bottom: 1.5rem; font-size:0.9rem;">"${p.desc}"</p>
-                
-                <div style="margin: 0 0 20px; padding: 15px; background: #fafafa; border-left: 2px solid var(--gold);">
-                    <strong style="text-transform:uppercase; font-size:0.7rem; letter-spacing:1px;">Notes</strong><br>
-                    <span style="font-size:0.9rem;">${p.notes}</span>
-                </div>
+    const p = products.find(prod => prod.id === id);
+    const modal = document.getElementById('product-modal');
+    const body = document.getElementById('modal-body');
+    const hasDiscount = p.discount > 0 && p.stock > 0;
+    const discountedPrice = getDiscountedPrice(p);
+    const premiumLabel = p.premium
+        ? '<span class="premium-badge" style="position:static; display:inline-block; margin-bottom:1rem;">★ Premium</span>'
+        : '';
 
-                <p class="price" style="font-size: 1.5rem; margin-bottom: 2rem;">
-                    ${p.stock > 0 ? '₱' + p.price.toLocaleString() : 'Currently Unavailable'}
-                </p>
-
-                <button class="gold-btn" style="width: 100%; background: ${p.stock > 0 ? 'var(--text-main)' : 'transparent'}; color: ${p.stock > 0 ? '#fff' : 'var(--text-main)'};" 
-                onclick="window.open('https://m.me/ralphcastanares.3')">
-                    ${p.stock > 0 ? 'Acquire via Concierge' : 'Join Waitlist'}
-                </button>
-            </div>
-        `;
-        modal.style.display = "block";
-        document.body.style.overflow = 'hidden'; 
-    } catch (error) {
-        console.error('Error opening modal:', error);
-        alert('Sorry, there was an error loading this product.');
+    let priceDisplay;
+    if (p.stock > 0 && hasDiscount) {
+        priceDisplay = `<s class="original-price">₱${p.price.toLocaleString()}</s> ₱${discountedPrice.toLocaleString()} <span class="discount-badge" style="position:static; display:inline;">-${p.discount}%</span>`;
+    } else if (p.stock > 0) {
+        priceDisplay = '₱' + p.price.toLocaleString();
+    } else {
+        priceDisplay = 'Currently Unavailable';
     }
+    
+    body.innerHTML = `
+        <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
+            <img src="${p.image}" alt="${p.brand} ${p.name}" style="max-width: 100%; max-height: 400px; object-fit: contain; mix-blend-mode: multiply;">
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            ${premiumLabel}
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px;">${p.brand}</h2>
+            <h3 style="font-size: 1.2rem; font-weight: 300; margin-bottom: 1.5rem; color:#444;">${p.name}</h3>
+            <p style="font-style: italic; color: #666; margin-bottom: 1.5rem; font-size:0.9rem;">"${p.desc}"</p>
+            
+            <div style="margin: 0 0 20px; padding: 15px; background: #fafafa; border-left: 2px solid var(--gold);">
+                <strong style="text-transform:uppercase; font-size:0.7rem; letter-spacing:1px;">Notes</strong><br>
+                <span style="font-size:0.9rem;">${p.notes}</span>
+            </div>
+
+            <p class="price" style="font-size: 1.5rem; margin-bottom: 2rem;">
+                ${priceDisplay}
+            </p>
+
+            <button class="gold-btn" style="width: 100%; background: ${p.stock > 0 ? 'var(--text-main)' : 'transparent'}; color: ${p.stock > 0 ? '#fff' : 'var(--text-main)'};" 
+            onclick="window.open('https://m.me/ralphcastanares.3')">
+                ${p.stock > 0 ? 'Acquire via Concierge' : 'Join Waitlist'}
+            </button>
+        </div>
+    `;
+    modal.style.display = "block";
+    document.body.style.overflow = 'hidden'; 
 };
 
 window.closeModal = () => {
@@ -181,7 +242,15 @@ window.onclick = (e) => {
 }
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+        if (document.getElementById('product-modal').style.display === 'block') {
+            closeModal();
+        }
+        const mobileNav = document.getElementById('mobile-nav');
+        if (mobileNav.classList.contains('open')) {
+            toggleMobileMenu();
+        }
+    }
 });
 
 document.addEventListener('mousemove', (e) => {
