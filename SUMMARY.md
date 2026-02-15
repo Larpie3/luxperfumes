@@ -2,7 +2,7 @@
 
 ## What Was Created
 
-This PR adds comprehensive documentation to help you understand and improve your Luxe Scent Privé website.
+This PR adds comprehensive documentation to help you understand and improve your Black Vault Fragrances website.
 
 ### 📖 README.md (205 lines)
 A complete guide covering:

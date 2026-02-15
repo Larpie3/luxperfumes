@@ -35,8 +35,8 @@ window.showPage = function(pageId) {
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    const titles = { home: 'Luxe Scent Privé — Premium Perfume Boutique', catalogue: 'Collection — Luxe Scent Privé', about: 'Heritage — Luxe Scent Privé' };
-    document.title = titles[pageId] || 'Luxe Scent Privé';
+    const titles = { home: 'Black Vault Fragrances — Premium Fragrance Collection', catalogue: 'Collection — Black Vault Fragrances', about: 'Heritage — Black Vault Fragrances' };
+    document.title = titles[pageId] || 'Black Vault Fragrances';
 
     if(pageId === 'catalogue') {
         renderCatalogue();
