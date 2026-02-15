@@ -135,6 +135,18 @@ nav {
 
 .bundle-section { padding: 2rem 5% 4rem; text-align: center; }
 
+.bundle-promo.home-bundle-promo {
+    margin: 0 auto;
+    max-width: 700px;
+    padding: 2rem 2.5rem;
+}
+
+#catalogue > .bundle-promo {
+    padding-top: calc(5rem + 2rem);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
 .bundle-promo {
     max-width: 700px;
     margin: 0 auto 3rem;
@@ -402,15 +414,39 @@ nav {
     border-color: var(--gold);
 }
 
-/* Sticky Filter Bar */
+/* Sticky Filter Bar — hover-reveal dropdown */
 .catalogue-header.sticky {
-    position: sticky;
+    position: fixed;
     top: 60px;
-    z-index: 50;
-    background: rgba(248, 246, 242, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 1rem 0 1.5rem;
+    left: 0;
+    width: 100%;
+    z-index: 90;
+    background: rgba(248, 246, 242, 0.97);
+    backdrop-filter: blur(12px);
+    padding: 0.5rem 0 0.75rem;
     border-bottom: 1px solid var(--border);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.catalogue-header.sticky.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+.catalogue-header.sticky h2 { display: none; }
+.catalogue-header.sticky .search-bar { margin-bottom: 0.75rem; }
+.catalogue-header.sticky .controls-bar { margin-top: 0.5rem; }
+
+/* Hover trigger strip — sits below the main nav */
+#sticky-trigger {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 89;
+    display: none;
 }
 
 /* Back to Top Button */

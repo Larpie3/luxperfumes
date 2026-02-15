@@ -47,6 +47,8 @@ function renderBundleBuilder() {
     if (premiums.length === 0 || standards.length === 0) {
         bundleSection.style.display = 'none';
         document.getElementById('bundle-promo').style.display = 'none';
+        const homePromo = document.getElementById('home-bundle-promo');
+        if (homePromo) homePromo.style.display = 'none';
         return;
     }
 
@@ -57,6 +59,13 @@ function renderBundleBuilder() {
     const promo = document.getElementById('bundle-promo');
     promo.style.display = 'block';
     document.getElementById('bundle-promo-pct').textContent = BUNDLE_DISCOUNT_PERCENT;
+
+    // Show and update the home page promo banner
+    const homePromo = document.getElementById('home-bundle-promo');
+    if (homePromo) {
+        homePromo.style.display = 'block';
+        document.getElementById('home-bundle-promo-pct').textContent = BUNDLE_DISCOUNT_PERCENT;
+    }
 
     // Populate premium select
     premiumSelect.innerHTML = '<option value="">— Choose a Premium —</option>' +
@@ -410,13 +419,57 @@ window.addEventListener('scroll', () => {
     }
 
     const header = document.querySelector('.catalogue-header');
+    const trigger = document.getElementById('sticky-trigger');
     if (header && document.getElementById('catalogue').classList.contains('active')) {
         if (window.scrollY > 200) {
             header.classList.add('sticky');
+            trigger.style.display = 'block';
         } else {
             header.classList.remove('sticky');
+            header.classList.remove('visible');
+            trigger.style.display = 'none';
         }
+    } else {
+        if (trigger) trigger.style.display = 'none';
     }
 });
 
+// --- Sticky header hover-reveal ---
+(function() {
+    const trigger = document.getElementById('sticky-trigger');
+    const catalogueHeader = document.querySelector('.catalogue-header');
+    const nav = document.querySelector('nav');
+    const getHeader = () => document.querySelector('.catalogue-header.sticky');
+    let hideTimeout;
+
+    function showStickyHeader() {
+        clearTimeout(hideTimeout);
+        const header = getHeader();
+        if (header) header.classList.add('visible');
+    }
+
+    function scheduleStickyHide() {
+        hideTimeout = setTimeout(() => {
+            const header = getHeader();
+            if (header) header.classList.remove('visible');
+        }, 300);
+    }
+
+    if (trigger) {
+        trigger.addEventListener('mouseenter', showStickyHeader);
+        trigger.addEventListener('mouseleave', scheduleStickyHide);
+    }
+
+    if (nav) {
+        nav.addEventListener('mouseenter', showStickyHeader);
+        nav.addEventListener('mouseleave', scheduleStickyHide);
+    }
+
+    if (catalogueHeader) {
+        catalogueHeader.addEventListener('mouseenter', showStickyHeader);
+        catalogueHeader.addEventListener('mouseleave', scheduleStickyHide);
+    }
+})();
+
 showPage('home');
+renderBundleBuilder();
