@@ -63,7 +63,7 @@ function renderCatalogue() {
     
     let filtered = currentCategory === 'All' 
         ? [...products] 
-        : products.filter(p => p.category === currentCategory);
+        : [...products.filter(p => p.category === currentCategory)];
 
     if (currentSearch) {
         const q = currentSearch.toLowerCase();
