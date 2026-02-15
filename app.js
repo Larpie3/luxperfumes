@@ -62,8 +62,34 @@ function renderCatalogue() {
     const bundleGrid = document.getElementById('bundle-grid');
     
     let filtered = currentCategory === 'All' 
-        ? products 
+        ? [...products] 
         : products.filter(p => p.category === currentCategory);
+
+    if (currentSearch) {
+        const q = currentSearch.toLowerCase();
+        filtered = filtered.filter(p =>
+            p.brand.toLowerCase().includes(q) ||
+            p.name.toLowerCase().includes(q) ||
+            p.notes.toLowerCase().includes(q)
+        );
+    }
+
+    if (currentPriceRange) {
+        const [min, max] = currentPriceRange.split('-').map(Number);
+        filtered = filtered.filter(p => {
+            const price = getDiscountedPrice(p);
+            return price >= min && price <= max;
+        });
+    }
+
+    if (currentSort) {
+        switch (currentSort) {
+            case 'price-low': filtered.sort((a, b) => getDiscountedPrice(a) - getDiscountedPrice(b)); break;
+            case 'price-high': filtered.sort((a, b) => getDiscountedPrice(b) - getDiscountedPrice(a)); break;
+            case 'brand': filtered.sort((a, b) => a.brand.localeCompare(b.brand)); break;
+            case 'name': filtered.sort((a, b) => a.name.localeCompare(b.name)); break;
+        }
+    }
 
     const available = filtered.filter(p => p.stock > 0);
     const archived = filtered.filter(p => p.stock === 0);
@@ -209,16 +235,16 @@ window.openModal = function(id) {
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             ${premiumLabel}
-            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px;">${p.brand}</h2>
-            <h3 style="font-size: 1.2rem; font-weight: 300; margin-bottom: 1.5rem; color:#444;">${p.name}</h3>
-            <p style="font-style: italic; color: #666; margin-bottom: 1.5rem; font-size:0.9rem;">"${p.desc}"</p>
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px; font-weight:600; color:#1A1A1A;">${p.brand}</h2>
+            <h3 style="font-size: 1.2rem; font-weight: 400; margin-bottom: 1.5rem; color:#333;">${p.name}</h3>
+            <p style="font-style: italic; color: #555; margin-bottom: 1.5rem; font-size:0.95rem;">"${p.desc}"</p>
             
-            <div style="margin: 0 0 20px; padding: 15px; background: #fafafa; border-left: 2px solid var(--gold);">
-                <strong style="text-transform:uppercase; font-size:0.7rem; letter-spacing:1px;">Notes</strong><br>
-                <span style="font-size:0.9rem;">${p.notes}</span>
+            <div style="margin: 0 0 20px; padding: 15px; background: #faf8f3; border-left: 3px solid var(--gold);">
+                <strong style="text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; color:#1A1A1A;">Notes</strong><br>
+                <span style="font-size:0.95rem; color:#333; font-weight:400;">${p.notes}</span>
             </div>
 
-            <p class="price" style="font-size: 1.5rem; margin-bottom: 2rem;">
+            <p class="price" style="font-size: 1.5rem; margin-bottom: 2rem; font-weight:600;">
                 ${priceDisplay}
             </p>
 
