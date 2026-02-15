@@ -1,5 +1,8 @@
 const products = [
   // --- AVAILABLE COLLECTION ---
+  // To add a discount: set "discount" to a percentage (e.g. 10 = 10% off)
+  // To mark as premium: set "premium" to true
+  // Bundles are auto-generated: any premium + standard (non-premium) pair gets a bundle discount
   {
     "id": "D001",
     "brand": "Dior",
@@ -9,7 +12,9 @@ const products = [
     "stock": 1,
     "image": "images/dior-sauvage.jpg",
     "desc": "The quintessential modern aromatic fougere. A composition of radical freshness.",
-    "notes": "Bergamot, Sichuan Pepper, Ambroxan"
+    "notes": "Bergamot, Sichuan Pepper, Ambroxan",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "MFK001",
@@ -20,7 +25,9 @@ const products = [
     "stock": 1,
     "image": "images/br540.jpg",
     "desc": "Luminous and sophisticated, laying on the skin like an amber floral and woody breeze.",
-    "notes": "Jasmine, Saffron, Cedarwood, Ambergris"
+    "notes": "Jasmine, Saffron, Cedarwood, Ambergris",
+    "premium": true,
+    "discount": 0
   },
   {
     "id": "C001",
@@ -31,7 +38,9 @@ const products = [
     "stock": 1,
     "image": "images/aventus.jpg",
     "desc": "The exceptional Aventus was inspired by the dramatic life of a historic emperor.",
-    "notes": "Pineapple, Birch, Musk, Oakmoss"
+    "notes": "Pineapple, Birch, Musk, Oakmoss",
+    "premium": true,
+    "discount": 0
   },
   {
     "id": "TF003",
@@ -42,7 +51,9 @@ const products = [
     "stock": 1,
     "image": "images/tf-cherry.jpg",
     "desc": "A full-bodied journey into the once-forbidden.",
-    "notes": "Black Cherry, Tonka Bean, Almond"
+    "notes": "Black Cherry, Tonka Bean, Almond",
+    "premium": true,
+    "discount": 0
   },
 
   // --- ARCHIVE / SOLD OUT (Stock: 0) ---
@@ -55,7 +66,9 @@ const products = [
     "stock": 0,
     "image": "images/tf-tobacco.jpg",
     "desc": "Opulent. Warm. Iconic. Reminiscent of an English Gentleman's Club.",
-    "notes": "Tobacco Leaf, Spice, Vanilla"
+    "notes": "Tobacco Leaf, Spice, Vanilla",
+    "premium": true,
+    "discount": 0
   },
   {
     "id": "TF002",
@@ -66,7 +79,9 @@ const products = [
     "stock": 0,
     "image": "images/tf-oud.jpg",
     "desc": "Rare. Exotic. Distinctive. One of the most rare, precious, and expensive ingredients.",
-    "notes": "Rosewood, Cardamom, Oud Wood"
+    "notes": "Rosewood, Cardamom, Oud Wood",
+    "premium": true,
+    "discount": 0
   },
   {
     "id": "CH001",
@@ -77,7 +92,9 @@ const products = [
     "stock": 0,
     "image": "images/bleu.jpg",
     "desc": "A tribute to masculine freedom in an aromatic-woody fragrance.",
-    "notes": "Citrus, Labdanum, Sandalwood"
+    "notes": "Citrus, Labdanum, Sandalwood",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "CH002",
@@ -88,7 +105,9 @@ const products = [
     "stock": 0,
     "image": "images/coco.jpg",
     "desc": "The essence of a free and captivating woman.",
-    "notes": "Orange, Patchouli, Turkish Rose"
+    "notes": "Orange, Patchouli, Turkish Rose",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "YSL001",
@@ -99,7 +118,9 @@ const products = [
     "stock": 0,
     "image": "images/ysl-y.jpg",
     "desc": "An authentic fragrance expression capturing the essence of modern men.",
-    "notes": "Apple, Sage, Vetiver"
+    "notes": "Apple, Sage, Vetiver",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "YSL002",
@@ -110,7 +131,9 @@ const products = [
     "stock": 0,
     "image": "images/libre.jpg",
     "desc": "The floral lavender. The scent of freedom.",
-    "notes": "Lavender, Orange Blossom, Musk"
+    "notes": "Lavender, Orange Blossom, Musk",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "JM001",
@@ -121,7 +144,9 @@ const products = [
     "stock": 0,
     "image": "images/english-pear.jpg",
     "desc": "The essence of autumn. Sensuous freshness.",
-    "notes": "King William Pear, Freesia, Patchouli"
+    "notes": "King William Pear, Freesia, Patchouli",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "JM002",
@@ -132,7 +157,9 @@ const products = [
     "stock": 0,
     "image": "images/wood-sage.jpg",
     "desc": "Alive with the mineral scent of the rugged cliffs.",
-    "notes": "Ambrette Seeds, Sea Salt, Sage"
+    "notes": "Ambrette Seeds, Sea Salt, Sage",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "PR001",
@@ -143,7 +170,9 @@ const products = [
     "stock": 0,
     "image": "images/prada-paradoxe.jpg",
     "desc": "A floral ambery fragrance that embraces the paradoxes of iconic ingredients.",
-    "notes": "Neroli, Amber, Musk"
+    "notes": "Neroli, Amber, Musk",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "LL001",
@@ -154,7 +183,9 @@ const products = [
     "stock": 0,
     "image": "images/santal33.jpg",
     "desc": "A defining image of the spirit of the American West.",
-    "notes": "Cardamom, Iris, Violet, Ambrox"
+    "notes": "Cardamom, Iris, Violet, Ambrox",
+    "premium": true,
+    "discount": 0
   },
   {
     "id": "V001",
@@ -165,7 +196,9 @@ const products = [
     "stock": 0,
     "image": "images/eros.jpg",
     "desc": "Sublime masculinity through a luminous aura.",
-    "notes": "Mint, Green Apple, Tonka Bean"
+    "notes": "Mint, Green Apple, Tonka Bean",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "CHH001",
@@ -176,7 +209,9 @@ const products = [
     "stock": 0,
     "image": "images/good-girl.jpg",
     "desc": "A bold blend of dark and light elements.",
-    "notes": "Almond, Tuberose, Cocoa"
+    "notes": "Almond, Tuberose, Cocoa",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "PM001",
@@ -187,7 +222,9 @@ const products = [
     "stock": 0,
     "image": "images/delina.jpg",
     "desc": "A floral bouquet structured with Turkish rose.",
-    "notes": "Lychee, Rhubarb, Vanilla"
+    "notes": "Lychee, Rhubarb, Vanilla",
+    "premium": true,
+    "discount": 0
   },
   {
     "id": "LV001",
@@ -198,7 +235,9 @@ const products = [
     "stock": 0,
     "image": "images/ombre.jpg",
     "desc": "Designed for lovers of rare essences, Ombre Nomade concentrates that sensation of infinity.",
-    "notes": "Oud, Benzoin, Incense"
+    "notes": "Oud, Benzoin, Incense",
+    "premium": true,
+    "discount": 0
   },
   {
     "id": "VAL001",
@@ -209,7 +248,9 @@ const products = [
     "stock": 0,
     "image": "images/born-roma.jpg",
     "desc": "A modern floral haute couture fragrance.",
-    "notes": "Blackcurrant, Jasmine, Vanilla"
+    "notes": "Blackcurrant, Jasmine, Vanilla",
+    "premium": false,
+    "discount": 0
   },
   {
     "id": "AR001",
@@ -220,8 +261,16 @@ const products = [
     "stock": 0,
     "image": "images/adg.jpg",
     "desc": "A mythical, fresh and aquatic fragrance.",
-    "notes": "Marine Notes, Bergamot, Cedar"
+    "notes": "Marine Notes, Bergamot, Cedar",
+    "premium": false,
+    "discount": 0
   }
 ];
 
+// ─── BUNDLE CONFIGURATION ───
+// Bundle discount percentage applied when pairing a premium + standard product
+// Edit this value to change the bundle discount
+const BUNDLE_DISCOUNT_PERCENT = 10;
+
+export { BUNDLE_DISCOUNT_PERCENT };
 export default products;
