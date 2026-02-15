@@ -34,32 +34,79 @@ function getDiscountedPrice(p) {
     return p.price;
 }
 
-function generateBundles(availableProducts) {
-    const premiums = availableProducts.filter(p => p.premium);
-    const standards = availableProducts.filter(p => !p.premium);
-    const bundles = [];
+function renderBundleBuilder() {
+    const allAvailable = products.filter(p => p.stock > 0);
+    const premiums = allAvailable.filter(p => p.premium);
+    const standards = allAvailable.filter(p => !p.premium);
+    const bundleSection = document.getElementById('bundle-section');
+    const premiumSelect = document.getElementById('bundle-premium-select');
+    const standardSelect = document.getElementById('bundle-standard-select');
+    const discountPct = document.getElementById('bundle-discount-pct');
 
-    premiums.forEach(premiumProduct => {
-        standards.forEach(standardProduct => {
-            const originalTotal = getDiscountedPrice(premiumProduct) + getDiscountedPrice(standardProduct);
-            const bundlePrice = Math.round(originalTotal * (1 - BUNDLE_DISCOUNT_PERCENT / 100));
-            bundles.push({
-                premium: premiumProduct,
-                standard: standardProduct,
-                originalTotal,
-                bundlePrice,
-                savings: originalTotal - bundlePrice
-            });
-        });
-    });
+    if (premiums.length === 0 || standards.length === 0) {
+        bundleSection.style.display = 'none';
+        return;
+    }
 
-    return bundles;
+    bundleSection.style.display = 'block';
+    discountPct.textContent = BUNDLE_DISCOUNT_PERCENT;
+
+    // Populate premium select
+    premiumSelect.innerHTML = '<option value="">— Choose a Premium —</option>' +
+        premiums.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+
+    // Populate standard select
+    standardSelect.innerHTML = '<option value="">— Choose a Standard —</option>' +
+        standards.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+
+    document.getElementById('bundle-summary').style.display = 'none';
 }
+
+window.updateBundleSummary = function() {
+    const premiumId = document.getElementById('bundle-premium-select').value;
+    const standardId = document.getElementById('bundle-standard-select').value;
+    const summary = document.getElementById('bundle-summary');
+
+    if (!premiumId || !standardId) {
+        summary.style.display = 'none';
+        return;
+    }
+
+    const premiumProduct = products.find(p => p.id === premiumId);
+    const standardProduct = products.find(p => p.id === standardId);
+    const originalTotal = getDiscountedPrice(premiumProduct) + getDiscountedPrice(standardProduct);
+    const bundlePrice = Math.round(originalTotal * (1 - BUNDLE_DISCOUNT_PERCENT / 100));
+    const savings = originalTotal - bundlePrice;
+
+    summary.innerHTML = `
+        <div class="bundle-summary-items">
+            <div class="bundle-summary-item" onclick="openModal('${premiumProduct.id}')">
+                <img src="${premiumProduct.image}" alt="${premiumProduct.name}">
+                <span class="premium-badge" style="position:static; display:inline-block; font-size:0.55rem; padding:2px 6px;">★ Premium</span>
+                <p>${premiumProduct.brand} — ${premiumProduct.name}</p>
+            </div>
+            <span class="bundle-plus">+</span>
+            <div class="bundle-summary-item" onclick="openModal('${standardProduct.id}')">
+                <img src="${standardProduct.image}" alt="${standardProduct.name}">
+                <p>${standardProduct.brand} — ${standardProduct.name}</p>
+            </div>
+        </div>
+        <div class="bundle-pricing">
+            <span class="original-price">₱${originalTotal.toLocaleString()}</span>
+            <span class="bundle-price">₱${bundlePrice.toLocaleString()}</span>
+            <span class="bundle-savings">Save ₱${savings.toLocaleString()} (${BUNDLE_DISCOUNT_PERCENT}% off)</span>
+        </div>
+        <button class="gold-btn" style="width:100%; margin-top:1rem; background:var(--text-main); color:#fff;"
+            onclick="window.open('https://m.me/ralphcastanares.3')">
+            Acquire Bundle via Concierge
+        </button>
+    `;
+    summary.style.display = 'block';
+};
 
 function renderCatalogue() {
     const mainGrid = document.getElementById('product-grid');
     const archiveGrid = document.getElementById('archive-grid');
-    const bundleGrid = document.getElementById('bundle-grid');
     
     let filtered = currentCategory === 'All' 
         ? [...products] 
@@ -102,17 +149,8 @@ function renderCatalogue() {
 
     archiveGrid.innerHTML = archived.map(p => createCard(p, true)).join('');
 
-    // Render bundles
-    const allAvailable = products.filter(p => p.stock > 0);
-    const bundles = generateBundles(allAvailable);
-    if (bundleGrid) {
-        if (bundles.length > 0) {
-            bundleGrid.innerHTML = bundles.map(b => createBundleCard(b)).join('');
-            document.getElementById('bundle-section').style.display = 'block';
-        } else {
-            document.getElementById('bundle-section').style.display = 'none';
-        }
-    }
+    // Render bundle builder
+    renderBundleBuilder();
 }
 
 function createCard(p, isArchive = false) {
@@ -143,33 +181,6 @@ function createCard(p, isArchive = false) {
     `;
 }
 
-function createBundleCard(b) {
-    return `
-        <div class="bundle-card">
-            <div class="bundle-items">
-                <div class="bundle-item" onclick="openModal('${b.premium.id}')">
-                    <img src="${b.premium.image}" alt="${b.premium.name}">
-                    <span class="premium-badge">★ Premium</span>
-                    <p>${b.premium.brand} — ${b.premium.name}</p>
-                </div>
-                <span class="bundle-plus">+</span>
-                <div class="bundle-item" onclick="openModal('${b.standard.id}')">
-                    <img src="${b.standard.image}" alt="${b.standard.name}">
-                    <p>${b.standard.brand} — ${b.standard.name}</p>
-                </div>
-            </div>
-            <div class="bundle-pricing">
-                <span class="original-price">₱${b.originalTotal.toLocaleString()}</span>
-                <span class="bundle-price">₱${b.bundlePrice.toLocaleString()}</span>
-                <span class="bundle-savings">Save ₱${b.savings.toLocaleString()} (${BUNDLE_DISCOUNT_PERCENT}% off)</span>
-            </div>
-            <button class="gold-btn" style="width:100%; margin-top:1rem; background:var(--text-main); color:#fff;"
-                onclick="window.open('https://m.me/ralphcastanares.3')">
-                Acquire Bundle via Concierge
-            </button>
-        </div>
-    `;
-}
 
 window.filterProducts = function(category) {
     currentCategory = category;
@@ -244,7 +255,7 @@ window.openModal = function(id) {
                 <span style="font-size:0.95rem; color:#333; font-weight:400;">${p.notes}</span>
             </div>
 
-            <p class="price" style="font-size: 1.5rem; margin-bottom: 2rem; font-weight:600;">
+            <p class="price" style="font-size: 1.8rem; margin-bottom: 2rem; font-weight:700; letter-spacing:0.5px;">
                 ${priceDisplay}
             </p>
 
