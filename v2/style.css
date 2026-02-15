@@ -308,19 +308,29 @@ nav {
     .mobile-menu-icon { display: block; }
     .hero h1 { font-size: 3rem; }
     .grid { grid-template-columns: 1fr 1fr; gap: 1rem; padding: 0 3% 4rem; }
-    .product-card { padding: 1.5rem 0.5rem; }
-    .product-card img { height: 180px; }
-    .modal-content { flex-direction: column; padding: 2rem; width: 95%; gap: 1.5rem; }
+    .product-card { padding: 1rem 0.5rem; }
+    .product-card img { height: 150px; min-height: 150px; }
+    .product-card h3 { font-size: 0.95rem; }
+    .product-card p { font-size: 0.8rem; }
+    .price { font-size: 1.2rem; }
+    .modal-content { flex-direction: column; padding: 1.5rem; width: 95%; gap: 1rem; max-height: 85vh; }
+    .close { font-size: 1.6rem; top: 0.5rem; right: 0.75rem; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; z-index: 10; }
     .about-container .heritage-values { grid-template-columns: 1fr; }
     .bundle-builder { flex-direction: column; }
     .bundle-plus-icon { font-size: 1.5rem; }
     .compare-body { grid-template-columns: 1fr !important; }
     .compare-modal-content { max-height: 85vh; overflow-y: auto; }
+    .bundle-promo.home-bundle-promo { position: relative; bottom: auto; left: auto; transform: none; width: calc(100% - 2rem); margin: -2rem auto 0; padding: 1.2rem 1rem; }
+    .bundle-promo.home-bundle-promo:hover { transform: translateY(-3px); }
+    .bundle-promo-title { font-size: 1.2rem; }
+    .bundle-promo-text { font-size: 0.75rem; }
+    #catalogue > .bundle-promo { margin-top: calc(3rem + 1rem); margin-left: 3%; margin-right: 3%; padding: 1rem 1rem; }
 }
 
 @media (max-width: 480px) {
     .hero h1 { font-size: 2.5rem; }
     .grid { grid-template-columns: 1fr; }
+    .product-card img { height: 180px; min-height: 180px; }
     .filter-bar { gap: 1.5rem; justify-content: flex-start; }
     .controls-bar { flex-direction: column; }
     .compare-tray-inner { flex-wrap: wrap; justify-content: center; }

@@ -51,11 +51,11 @@ function renderBundleBuilder() {
     const premiums = allAvailable.filter(p => p.premium);
     const standards = allAvailable.filter(p => !p.premium);
     const bundleSection = document.getElementById('bundle-section');
-    const premiumSelect = document.getElementById('bundle-premium-select');
-    const standardSelect = document.getElementById('bundle-standard-select');
+    const select1 = document.getElementById('bundle-select-1');
+    const select2 = document.getElementById('bundle-select-2');
     const discountPct = document.getElementById('bundle-discount-pct');
 
-    if (premiums.length === 0 || standards.length === 0) {
+    if (allAvailable.length < 2) {
         bundleSection.style.display = 'none';
         document.getElementById('bundle-promo').style.display = 'none';
         const homePromo = document.getElementById('home-bundle-promo');
@@ -78,44 +78,60 @@ function renderBundleBuilder() {
         document.getElementById('home-bundle-promo-pct').textContent = USER_PROMO_DISCOUNT;
     }
 
-    // Populate premium select
-    premiumSelect.innerHTML = '<option value="">— Choose a Premium —</option>' +
-        premiums.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+    // Build grouped options for both selects
+    const buildOptions = () => {
+        let html = '<option value="">— Choose Fragrance —</option>';
+        if (premiums.length > 0) {
+            html += '<optgroup label="★ Premium">';
+            html += premiums.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+            html += '</optgroup>';
+        }
+        if (standards.length > 0) {
+            html += '<optgroup label="Standard">';
+            html += standards.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+            html += '</optgroup>';
+        }
+        return html;
+    };
 
-    // Populate standard select
-    standardSelect.innerHTML = '<option value="">— Choose a Standard —</option>' +
-        standards.map(p => `<option value="${p.id}">${p.brand} — ${p.name} (₱${getDiscountedPrice(p).toLocaleString()})</option>`).join('');
+    select1.innerHTML = buildOptions();
+    select2.innerHTML = buildOptions();
 
     document.getElementById('bundle-summary').style.display = 'none';
 }
 
 window.updateBundleSummary = function() {
-    const premiumId = document.getElementById('bundle-premium-select').value;
-    const standardId = document.getElementById('bundle-standard-select').value;
+    const id1 = document.getElementById('bundle-select-1').value;
+    const id2 = document.getElementById('bundle-select-2').value;
     const summary = document.getElementById('bundle-summary');
 
-    if (!premiumId || !standardId) {
+    if (!id1 || !id2 || id1 === id2) {
         summary.style.display = 'none';
         return;
     }
 
-    const premiumProduct = products.find(p => p.id === premiumId);
-    const standardProduct = products.find(p => p.id === standardId);
-    const originalTotal = getDiscountedPrice(premiumProduct) + getDiscountedPrice(standardProduct);
+    const product1 = products.find(p => p.id === id1);
+    const product2 = products.find(p => p.id === id2);
+    const originalTotal = getDiscountedPrice(product1) + getDiscountedPrice(product2);
     const bundlePrice = Math.round(originalTotal * (1 - USER_PROMO_DISCOUNT / 100));
     const savings = originalTotal - bundlePrice;
 
+    const badgeHtml = (p) => p.premium
+        ? '<span class="premium-badge" style="position:static; display:inline-block; font-size:0.55rem; padding:2px 6px;">★ Premium</span>'
+        : '';
+
     summary.innerHTML = `
         <div class="bundle-summary-items">
-            <div class="bundle-summary-item" onclick="openModal('${premiumProduct.id}')">
-                <img src="${premiumProduct.image}" alt="${premiumProduct.name}">
-                <span class="premium-badge" style="position:static; display:inline-block; font-size:0.55rem; padding:2px 6px;">★ Premium</span>
-                <p>${premiumProduct.brand} — ${premiumProduct.name}</p>
+            <div class="bundle-summary-item" onclick="openModal('${product1.id}')">
+                <img src="${product1.image}" alt="${product1.name}">
+                ${badgeHtml(product1)}
+                <p>${product1.brand} — ${product1.name}</p>
             </div>
             <span class="bundle-plus">+</span>
-            <div class="bundle-summary-item" onclick="openModal('${standardProduct.id}')">
-                <img src="${standardProduct.image}" alt="${standardProduct.name}">
-                <p>${standardProduct.brand} — ${standardProduct.name}</p>
+            <div class="bundle-summary-item" onclick="openModal('${product2.id}')">
+                <img src="${product2.image}" alt="${product2.name}">
+                ${badgeHtml(product2)}
+                <p>${product2.brand} — ${product2.name}</p>
             </div>
         </div>
         <div class="bundle-pricing">
