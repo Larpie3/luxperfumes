@@ -22,7 +22,7 @@ const products = [
     "name": "Miss Dior Blooming Bouquet",
     "category": "Women",
     "price": 850,
-    "stock": 1,
+    "stock": 0,
     "image": "images/miss-dior.jpg",
     "desc": "A couture fragrance evoking a fresh bouquet of flowers, joyful and luminous.",
     "notes": "Peony, Damascus Rose, White Musk",
