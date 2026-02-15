@@ -596,6 +596,17 @@ nav {
     font-weight: 700;
     margin-top: 0;
 }
+.compare-row-value-desc {
+    font-style: italic;
+    font-size: 0.8rem;
+}
+.premium-badge-inline {
+    position: static;
+    display: inline-block;
+    font-size: 0.55rem;
+    padding: 2px 6px;
+    margin-bottom: 0.5rem;
+}
 
 /* 360px Breakpoint */
 @media (max-width: 360px) {

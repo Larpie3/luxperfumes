@@ -168,7 +168,7 @@ function createCard(p, isArchive = false) {
 
     let compareBtn = '';
     if (!isArchive) {
-        compareBtn = `<span class="compare-checkbox ${isCompared ? 'selected' : ''}" onclick="event.stopPropagation(); toggleCompare('${p.id}')" title="Compare">✓</span>`;
+        compareBtn = `<button class="compare-checkbox ${isCompared ? 'selected' : ''}" onclick="event.stopPropagation(); toggleCompare('${p.id}')" title="Compare" aria-label="Compare ${p.brand} ${p.name}">✓</button>`;
     }
 
     let priceHtml;
@@ -364,7 +364,7 @@ window.openCompareModal = function() {
     body.style.gridTemplateColumns = `repeat(${items.length}, 1fr)`;
     body.innerHTML = items.map(p => {
         const price = getDiscountedPrice(p);
-        const premiumLabel = p.premium ? '<span class="premium-badge" style="position:static; display:inline-block; font-size:0.55rem; padding:2px 6px; margin-bottom:0.5rem;">★ Premium</span>' : '';
+        const premiumLabel = p.premium ? '<span class="premium-badge premium-badge-inline">★ Premium</span>' : '';
         return `
             <div class="compare-column">
                 <img src="${p.image}" alt="${p.brand} ${p.name}">
@@ -385,7 +385,7 @@ window.openCompareModal = function() {
                 </div>
                 <div class="compare-row">
                     <div class="compare-row-label">Description</div>
-                    <div class="compare-row-value" style="font-style:italic; font-size:0.8rem;">"${p.desc}"</div>
+                    <div class="compare-row-value compare-row-value-desc">"${p.desc}"</div>
                 </div>
             </div>
         `;
