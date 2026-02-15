@@ -1,4 +1,4 @@
-# 🚀 Suggested Improvements for Luxe Scent Privé
+# 🚀 Suggested Improvements for Black Vault Fragrances
 
 This document outlines recommended improvements for both the **root** and **v2** versions of the site, covering **PC** and **mobile** experiences.
 

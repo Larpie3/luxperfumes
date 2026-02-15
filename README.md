@@ -1,10 +1,10 @@
-# 🌸 Luxe Scent Privé
+# 🌸 Black Vault Fragrances
 
 > *A curated anthology of the world's most prestigious essences*
 
-**Luxe Scent Privé** is an elegant, luxury perfume boutique website showcasing premium fragrances from the world's most renowned brands. Built as a single-page application with a sophisticated design aesthetic that mirrors the luxury of the products it presents.
+**Black Vault Fragrances** is an elegant, luxury perfume boutique website showcasing premium fragrances from the world's most renowned brands. Built as a single-page application with a sophisticated design aesthetic that mirrors the luxury of the products it presents.
 
-![Luxe Scent Privé Homepage](https://github.com/user-attachments/assets/a2531c7d-f3dd-498c-9194-f094f4f45d17)
+![Black Vault Fragrances Homepage](https://github.com/user-attachments/assets/a2531c7d-f3dd-498c-9194-f094f4f45d17)
 
 ## ✨ Features
 

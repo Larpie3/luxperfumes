@@ -17,9 +17,12 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+const LOW_STOCK_THRESHOLD = 3;
+
 let currentCategory = 'All';
 let currentSearch = '';
 let currentPriceRange = '';
+let currentScent = '';
 let currentSort = '';
 let compareList = [];
 
@@ -35,8 +38,8 @@ window.showPage = function(pageId) {
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    const titles = { home: 'Luxe Scent Privé — Premium Perfume Boutique', catalogue: 'Collection — Luxe Scent Privé', about: 'Heritage — Luxe Scent Privé' };
-    document.title = titles[pageId] || 'Luxe Scent Privé';
+    const titles = { home: 'Black Vault Fragrances — Premium Fragrance Collection', catalogue: 'Collection — Black Vault Fragrances', about: 'Heritage — Black Vault Fragrances' };
+    document.title = titles[pageId] || 'Black Vault Fragrances';
 
     if(pageId === 'catalogue') {
         renderCatalogue();
@@ -187,6 +190,10 @@ function renderCatalogue() {
         });
     }
 
+    if (currentScent) {
+        filtered = filtered.filter(p => p.topScent === currentScent);
+    }
+
     if (currentSort) {
         switch (currentSort) {
             case 'price-low': filtered.sort((a, b) => getDiscountedPrice(a) - getDiscountedPrice(b)); break;
@@ -221,6 +228,7 @@ function renderCatalogue() {
 
 function createCard(p, isArchive = false) {
     const premiumBadge = p.premium ? '<span class="premium-badge">★ Premium</span>' : '';
+    const stockBadge = (p.stock <= LOW_STOCK_THRESHOLD && p.stock > 0) ? `<span class="stock-badge${p.stock === 1 ? ' stock-badge-last' : ''}">Only ${escapeHtml(String(p.stock))} left</span>` : '';
     const hasDiscount = p.discount > 0 && p.stock > 0;
     const discountedPrice = getDiscountedPrice(p);
     const isCompared = compareList.includes(p.id);
@@ -245,6 +253,7 @@ function createCard(p, isArchive = false) {
     return `
         <div class="product-card" onclick="openModal('${p.id}')">
             ${premiumBadge}
+            ${stockBadge}
             ${compareBtn}
             <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" loading="lazy">
             <h3>${escapeHtml(p.brand)}</h3>
@@ -281,6 +290,11 @@ window.sortProducts = function(sortBy) {
 
 window.filterByPrice = function(range) {
     currentPriceRange = range;
+    renderCatalogue();
+};
+
+window.filterByScent = function(scent) {
+    currentScent = scent;
     renderCatalogue();
 };
 
@@ -455,6 +469,7 @@ window.openCompareModal = function() {
 
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
+    modal.querySelector('.modal-content').scrollTop = 0;
     modal.querySelector('.close').focus();
 };
 
@@ -464,6 +479,8 @@ window.closeCompareModal = function() {
 };
 
 // --- Back to Top & Sticky Header ---
+let lastScrollY = window.scrollY;
+
 window.addEventListener('scroll', () => {
     const btn = document.getElementById('back-to-top');
     if (window.scrollY > 400) {
@@ -478,6 +495,16 @@ window.addEventListener('scroll', () => {
         if (window.scrollY > 200) {
             header.classList.add('sticky');
             trigger.style.display = 'block';
+
+            // On mobile: show on scroll-up, hide on scroll-down
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                if (window.scrollY < lastScrollY) {
+                    header.classList.add('visible');
+                } else {
+                    header.classList.remove('visible');
+                }
+            }
         } else {
             header.classList.remove('sticky');
             header.classList.remove('visible');
@@ -486,6 +513,8 @@ window.addEventListener('scroll', () => {
     } else {
         if (trigger) trigger.style.display = 'none';
     }
+
+    lastScrollY = window.scrollY;
 });
 
 // --- Sticky header hover-reveal ---
@@ -509,6 +538,7 @@ window.addEventListener('scroll', () => {
         }, 500);
     }
 
+    // Desktop hover behavior
     if (trigger) {
         trigger.addEventListener('mouseenter', showStickyHeader);
         trigger.addEventListener('mouseleave', scheduleStickyHide);
@@ -522,6 +552,18 @@ window.addEventListener('scroll', () => {
     if (catalogueHeader) {
         catalogueHeader.addEventListener('mouseenter', showStickyHeader);
         catalogueHeader.addEventListener('mouseleave', scheduleStickyHide);
+    }
+
+    // Mobile tap on nav to toggle sticky header
+    if (nav) {
+        nav.addEventListener('click', (e) => {
+            if (window.innerWidth > 768) return;
+            if (e.target.closest('.mobile-menu-icon') || e.target.closest('a')) return;
+            const header = getHeader();
+            if (header) {
+                header.classList.toggle('visible');
+            }
+        });
     }
 })();
 

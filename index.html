@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxe Scent Privé — Premium Perfume Boutique</title>
-    <meta name="description" content="Luxe Scent Privé — A curated collection of luxury perfumes from world-renowned brands including Dior, Creed, Tom Ford, and more.">
+    <title>Black Vault Fragrances — Premium Fragrance Collection</title>
+    <meta name="description" content="Black Vault Fragrances — A curated collection of luxury perfumes from world-renowned brands including Dior, Creed, Tom Ford, and more.">
     <meta name="theme-color" content="#C5A059">
-    <meta property="og:title" content="Luxe Scent Privé — Premium Perfume Boutique">
+    <meta property="og:title" content="Black Vault Fragrances — Premium Fragrance Collection">
     <meta property="og:description" content="A curated anthology of the world's most prestigious essences.">
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="style.css">
@@ -15,7 +15,7 @@
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Luxe Scent Privé",
+      "name": "Black Vault Fragrances",
       "description": "A curated anthology of the world's most prestigious essences.",
       "url": "https://luxescentprive.com"
     }
@@ -26,7 +26,7 @@
     <a href="#content" class="skip-link">Skip to main content</a>
 
     <nav role="navigation" aria-label="Main navigation">
-        <div class="logo">LUXE SCENT PRIVÉ</div>
+        <div class="logo">BLACK VAULT FRAGRANCES</div>
         <div class="nav-links">
             <a href="#" onclick="showPage('home')" class="nav-link active" data-page="home">Home</a>
             <a href="#" onclick="showPage('catalogue')" class="nav-link" data-page="catalogue">Collection</a>
@@ -95,6 +95,17 @@
                         <option value="1000-1500">₱1,000 - ₱1,500</option>
                         <option value="1500-Infinity">Above ₱1,500</option>
                     </select>
+                    <select id="scent-filter" class="scent-filter-select" onchange="filterByScent(this.value)">
+                        <option value="">All Scents</option>
+                        <option value="Amber">Amber</option>
+                        <option value="Aquatic">Aquatic</option>
+                        <option value="Aromatic">Aromatic</option>
+                        <option value="Citrus">Citrus</option>
+                        <option value="Floral">Floral</option>
+                        <option value="Fruity">Fruity</option>
+                        <option value="Vanilla">Vanilla</option>
+                        <option value="Woody">Woody</option>
+                    </select>
                 </div>
             </header>
 
@@ -137,7 +148,7 @@
             <div class="about-container">
                 <h2>The Heritage</h2>
                 <p class="heritage-tagline">"Where every drop tells a story of timeless elegance."</p>
-                <p><span class="heritage-highlight">Luxe Scent Privé</span> stands as a bastion of timeless elegance. We do not merely sell fragrance — we curate <span class="heritage-highlight">memories</span>, <span class="heritage-highlight">emotions</span>, and <span class="heritage-highlight">invisible signatures</span> that define who you are.</p>
+                <p><span class="heritage-highlight">Black Vault Fragrances</span> stands as a bastion of timeless elegance. We do not merely sell fragrance — we curate <span class="heritage-highlight">memories</span>, <span class="heritage-highlight">emotions</span>, and <span class="heritage-highlight">invisible signatures</span> that define who you are.</p>
                 <p>Founded on a passion for the world's most <span class="heritage-highlight">prestigious perfume houses</span>, our collection is carefully selected from iconic maisons such as <span class="heritage-highlight">Dior</span>, <span class="heritage-highlight">Creed</span>, <span class="heritage-highlight">Tom Ford</span>, <span class="heritage-highlight">Maison Francis Kurkdjian</span>, and more. Each bottle we offer carries a legacy of artistry and craftsmanship passed down through generations.</p>
                 <p>We believe that fragrance is the most <span class="heritage-highlight">intimate form of self-expression</span> — an invisible accessory that speaks louder than words. Our mission is to bring these rare, luxurious scents within reach, offering an experience that is personal, exclusive, and unforgettable.</p>
                 <div class="heritage-values">
@@ -162,7 +173,7 @@
 
     <footer class="site-footer">
         <div class="footer-content">
-            <div class="footer-brand">LUXE SCENT PRIVÉ</div>
+            <div class="footer-brand">BLACK VAULT FRAGRANCES</div>
             <p class="footer-owner">By Ralph Castanares</p>
             <p class="footer-tagline">A curated anthology of the world's most prestigious essences.</p>
             <div class="footer-links">
@@ -171,7 +182,7 @@
                 <a href="#" onclick="showPage('about')">Heritage</a>
                 <a href="https://m.me/ralphcastanares.3" target="_blank" rel="noopener noreferrer">Concierge</a>
             </div>
-            <p class="footer-copy">&copy; 2025 Luxe Scent Privé. All rights reserved.</p>
+            <p class="footer-copy">&copy; 2025 Black Vault Fragrances. All rights reserved.</p>
         </div>
     </footer>
 
