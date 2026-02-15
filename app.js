@@ -17,6 +17,8 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+const LOW_STOCK_THRESHOLD = 3;
+
 let currentCategory = 'All';
 let currentSearch = '';
 let currentPriceRange = '';
@@ -226,7 +228,7 @@ function renderCatalogue() {
 
 function createCard(p, isArchive = false) {
     const premiumBadge = p.premium ? '<span class="premium-badge">★ Premium</span>' : '';
-    const stockBadge = (p.stock <= 3 && p.stock > 0) ? `<span class="stock-badge">Only ${escapeHtml(String(p.stock))} left</span>` : '';
+    const stockBadge = (p.stock <= LOW_STOCK_THRESHOLD && p.stock > 0) ? `<span class="stock-badge">Only ${escapeHtml(String(p.stock))} left</span>` : '';
     const hasDiscount = p.discount > 0 && p.stock > 0;
     const discountedPrice = getDiscountedPrice(p);
     const isCompared = compareList.includes(p.id);
