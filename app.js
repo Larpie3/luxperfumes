@@ -1,7 +1,7 @@
 import products from './products.js';
 
 const CONFIG = {
-    whatsappNumber: '639171234567',
+    whatsappNumber: '639219398475',
     currency: '₱',
     businessName: 'Luxe Scent Privé'
 };
