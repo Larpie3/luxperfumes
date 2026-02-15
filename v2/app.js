@@ -119,7 +119,7 @@ window.updateBundleSummary = function() {
         return;
     }
     if (id1 === id2) {
-        summary.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem; padding: 1rem;">Please select two different fragrances.</p>';
+        summary.innerHTML = '<p class="bundle-duplicate-msg">Please select two different fragrances.</p>';
         summary.style.display = 'block';
         return;
     }
