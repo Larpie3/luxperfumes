@@ -590,57 +590,34 @@ showPage('home');
 renderBundleBuilder();
 
 // --- Scroll Reveal Animations ---
-function initScrollReveal() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('revealed');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    // Observe product cards with stagger
-    document.querySelectorAll('.product-card').forEach((card, i) => {
+function observeNewElements() {
+    document.querySelectorAll('.product-card:not(.revealed)').forEach((card, i) => {
         card.classList.add('reveal');
         card.style.setProperty('--reveal-delay', i % 8);
-        observer.observe(card);
+        revealObserver.observe(card);
     });
 
-    // Observe heritage values
-    document.querySelectorAll('.heritage-value').forEach(el => {
+    document.querySelectorAll('.heritage-value:not(.revealed), .bundle-promo:not(.revealed), .bundle-section:not(.revealed), .about-container:not(.revealed), .catalogue-header:not(.revealed)').forEach(el => {
         el.classList.add('reveal');
-        observer.observe(el);
-    });
-
-    // Observe sections
-    document.querySelectorAll('.bundle-promo, .bundle-section, .about-container, .catalogue-header').forEach(el => {
-        el.classList.add('reveal');
-        observer.observe(el);
+        revealObserver.observe(el);
     });
 }
 
-// Re-init scroll reveals after catalogue render
-const origRenderCatalogue = renderCatalogue;
+// Hook into catalogue renders to observe new cards
+const _origRenderCatalogue = renderCatalogue;
 renderCatalogue = function() {
-    origRenderCatalogue();
-    requestAnimationFrame(() => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-        document.querySelectorAll('.product-card:not(.revealed)').forEach((card, i) => {
-            card.classList.add('reveal');
-            card.style.setProperty('--reveal-delay', i % 8);
-            observer.observe(card);
-        });
-    });
+    _origRenderCatalogue();
+    requestAnimationFrame(observeNewElements);
 };
 
-// Init on load
-initScrollReveal();
+// Initial observation
+observeNewElements();
