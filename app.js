@@ -255,7 +255,7 @@ function createCard(p, isArchive = false) {
             ${premiumBadge}
             ${stockBadge}
             ${compareBtn}
-            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" loading="lazy">
+            <div class="img-wrap"><img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" loading="lazy"></div>
             <h3>${escapeHtml(p.brand)}</h3>
             <p>${escapeHtml(p.name)}</p>
             ${priceHtml}
@@ -331,7 +331,7 @@ window.openModal = function(id) {
     
     body.innerHTML = `
         <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
-            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" style="max-width: 100%; max-height: 400px; object-fit: contain;">
+            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" style="max-width: 100%; max-height: 400px; object-fit: contain;" onload="removeWhiteBg(this)">
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             ${premiumLabel}
@@ -481,6 +481,7 @@ window.closeCompareModal = function() {
 // --- Back to Top & Sticky Header ---
 let lastScrollY = window.scrollY;
 let scrollTicking = false;
+let stickyHideTimer = null;
 
 window.addEventListener('scroll', () => {
     if (!scrollTicking) {
@@ -501,17 +502,26 @@ window.addEventListener('scroll', () => {
 
                     // Smooth scroll-direction detection for both mobile & desktop
                     const scrollDelta = lastScrollY - window.scrollY;
-                    if (scrollDelta > 3) {
-                        // Scrolling up — reveal
+                    if (scrollDelta > 5) {
+                        // Scrolling up — reveal immediately
+                        clearTimeout(stickyHideTimer);
+                        stickyHideTimer = null;
                         header.classList.add('visible');
-                    } else if (scrollDelta < -3) {
-                        // Scrolling down — hide
-                        header.classList.remove('visible');
+                    } else if (scrollDelta < -8) {
+                        // Scrolling down — hide with small delay to avoid flicker
+                        if (!stickyHideTimer) {
+                            stickyHideTimer = setTimeout(() => {
+                                header.classList.remove('visible');
+                                stickyHideTimer = null;
+                            }, 150);
+                        }
                     }
                 } else {
                     header.classList.remove('sticky');
                     header.classList.remove('visible');
                     trigger.style.display = 'none';
+                    clearTimeout(stickyHideTimer);
+                    stickyHideTimer = null;
                 }
             } else {
                 if (trigger) trigger.style.display = 'none';
@@ -589,6 +599,41 @@ if (sessionStorage.getItem('archiveOpen') === 'true') {
 showPage('home');
 renderBundleBuilder();
 
+// --- Remove white backgrounds from product images ---
+function removeWhiteBg(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    ctx.drawImage(img, 0, 0);
+    try {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i], g = data[i+1], b = data[i+2];
+            if (r > 230 && g > 230 && b > 230) {
+                data[i+3] = 0;
+            } else if (r > 200 && g > 200 && b > 200) {
+                data[i+3] = Math.round(255 * (1 - (Math.min(r, g, b) - 200) / 55));
+            }
+        }
+        ctx.putImageData(imageData, 0, 0);
+        img.src = canvas.toDataURL('image/png');
+    } catch(e) { /* cross-origin or security error — skip */ }
+}
+
+function processProductImages() {
+    document.querySelectorAll('.product-card img').forEach(img => {
+        if (img.dataset.bgRemoved) return;
+        img.dataset.bgRemoved = '1';
+        if (img.complete && img.naturalWidth > 0) {
+            removeWhiteBg(img);
+        } else {
+            img.addEventListener('load', () => removeWhiteBg(img), { once: true });
+        }
+    });
+}
+
 // --- Scroll Reveal Animations ---
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -616,7 +661,10 @@ function observeNewElements() {
 const _origRenderCatalogue = renderCatalogue;
 renderCatalogue = function() {
     _origRenderCatalogue();
-    requestAnimationFrame(observeNewElements);
+    requestAnimationFrame(() => {
+        observeNewElements();
+        processProductImages();
+    });
 };
 
 // Initial observation
