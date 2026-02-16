@@ -157,7 +157,7 @@ window.updateBundleSummary = function() {
             <span class="bundle-savings">Save ₱${savings.toLocaleString()} (${USER_PROMO_DISCOUNT}% off)</span>
         </div>
         <p class="bundle-screenshot-reminder">📸 Please screenshot your bundle selection before contacting us!</p>
-        <button class="gold-btn" style="width:100%; margin-top:1rem; background:var(--text-main); color:#fff;"
+        <button class="gold-btn" style="width:100%; margin-top:1rem; background:var(--gold); color:#0A0A0A; border-color:var(--gold);"
             onclick="window.open('https://m.me/ralphcastanares.3')">
             Acquire Bundle via Concierge
         </button>
@@ -331,24 +331,24 @@ window.openModal = function(id) {
     
     body.innerHTML = `
         <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
-            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" style="max-width: 100%; max-height: 400px; object-fit: contain; mix-blend-mode: multiply;">
+            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" style="max-width: 100%; max-height: 400px; object-fit: contain;">
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             ${premiumLabel}
-            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px; font-weight:600; color:#1A1A1A;">${escapeHtml(p.brand)}</h2>
-            <h3 style="font-size: 1.2rem; font-weight: 400; margin-bottom: 1.5rem; color:#333;">${escapeHtml(p.name)}</h3>
-            <p style="font-style: italic; color: #555; margin-bottom: 1.5rem; font-size:0.95rem;">"${escapeHtml(p.desc)}"</p>
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing:1px; font-weight:600; color:var(--text-main);">${escapeHtml(p.brand)}</h2>
+            <h3 style="font-size: 1.2rem; font-weight: 400; margin-bottom: 1.5rem; color:var(--text-muted);">${escapeHtml(p.name)}</h3>
+            <p style="font-style: italic; color: var(--text-muted); margin-bottom: 1.5rem; font-size:0.95rem;">"${escapeHtml(p.desc)}"</p>
             
-            <div style="margin: 0 0 20px; padding: 15px; background: #faf8f3; border-left: 3px solid var(--gold);">
-                <strong style="text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; color:#1A1A1A;">Notes</strong><br>
-                <span style="font-size:0.95rem; color:#333; font-weight:400;">${escapeHtml(p.notes)}</span>
+            <div style="margin: 0 0 20px; padding: 15px; background: var(--surface, #111); border-left: 3px solid var(--gold);">
+                <strong style="text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; color:var(--text-main);">Notes</strong><br>
+                <span style="font-size:0.95rem; color:var(--text-muted); font-weight:400;">${escapeHtml(p.notes)}</span>
             </div>
 
             <p class="price" style="font-size: 1.8rem; margin-bottom: 2rem; font-weight:700; letter-spacing:0.5px;">
                 ${priceDisplay}
             </p>
 
-            <button class="gold-btn" style="width: 100%; background: ${p.stock > 0 ? 'var(--text-main)' : 'transparent'}; color: ${p.stock > 0 ? '#fff' : 'var(--text-main)'};" 
+            <button class="gold-btn" style="width: 100%; background: ${p.stock > 0 ? 'var(--gold)' : 'transparent'}; color: ${p.stock > 0 ? '#0A0A0A' : 'var(--gold)'}; border-color: var(--gold);" 
             onclick="window.open('https://m.me/ralphcastanares.3')">
                 ${p.stock > 0 ? 'Acquire via Concierge' : 'Join Waitlist'}
             </button>
@@ -480,41 +480,48 @@ window.closeCompareModal = function() {
 
 // --- Back to Top & Sticky Header ---
 let lastScrollY = window.scrollY;
+let scrollTicking = false;
 
 window.addEventListener('scroll', () => {
-    const btn = document.getElementById('back-to-top');
-    if (window.scrollY > 400) {
-        btn.classList.add('visible');
-    } else {
-        btn.classList.remove('visible');
-    }
-
-    const header = document.querySelector('.catalogue-header');
-    const trigger = document.getElementById('sticky-trigger');
-    if (header && document.getElementById('catalogue').classList.contains('active')) {
-        if (window.scrollY > 200) {
-            header.classList.add('sticky');
-            trigger.style.display = 'block';
-
-            // On mobile: show on scroll-up, hide on scroll-down
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                if (window.scrollY < lastScrollY) {
-                    header.classList.add('visible');
-                } else {
-                    header.classList.remove('visible');
-                }
+    if (!scrollTicking) {
+        requestAnimationFrame(() => {
+            const btn = document.getElementById('back-to-top');
+            if (window.scrollY > 400) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
             }
-        } else {
-            header.classList.remove('sticky');
-            header.classList.remove('visible');
-            trigger.style.display = 'none';
-        }
-    } else {
-        if (trigger) trigger.style.display = 'none';
-    }
 
-    lastScrollY = window.scrollY;
+            const header = document.querySelector('.catalogue-header');
+            const trigger = document.getElementById('sticky-trigger');
+            if (header && document.getElementById('catalogue').classList.contains('active')) {
+                if (window.scrollY > 200) {
+                    header.classList.add('sticky');
+                    trigger.style.display = 'block';
+
+                    // Smooth scroll-direction detection for both mobile & desktop
+                    const scrollDelta = lastScrollY - window.scrollY;
+                    if (scrollDelta > 3) {
+                        // Scrolling up — reveal
+                        header.classList.add('visible');
+                    } else if (scrollDelta < -3) {
+                        // Scrolling down — hide
+                        header.classList.remove('visible');
+                    }
+                } else {
+                    header.classList.remove('sticky');
+                    header.classList.remove('visible');
+                    trigger.style.display = 'none';
+                }
+            } else {
+                if (trigger) trigger.style.display = 'none';
+            }
+
+            lastScrollY = window.scrollY;
+            scrollTicking = false;
+        });
+        scrollTicking = true;
+    }
 });
 
 // --- Sticky header hover-reveal ---
@@ -581,3 +588,36 @@ if (sessionStorage.getItem('archiveOpen') === 'true') {
 
 showPage('home');
 renderBundleBuilder();
+
+// --- Scroll Reveal Animations ---
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+function observeNewElements() {
+    document.querySelectorAll('.product-card:not(.revealed)').forEach((card, i) => {
+        card.classList.add('reveal');
+        card.style.setProperty('--reveal-delay', i % 8);
+        revealObserver.observe(card);
+    });
+
+    document.querySelectorAll('.heritage-value:not(.revealed), .bundle-promo:not(.revealed), .bundle-section:not(.revealed), .about-container:not(.revealed), .catalogue-header:not(.revealed)').forEach(el => {
+        el.classList.add('reveal');
+        revealObserver.observe(el);
+    });
+}
+
+// Hook into catalogue renders to observe new cards
+const _origRenderCatalogue = renderCatalogue;
+renderCatalogue = function() {
+    _origRenderCatalogue();
+    requestAnimationFrame(observeNewElements);
+};
+
+// Initial observation
+observeNewElements();
