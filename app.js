@@ -278,13 +278,14 @@ window.filterProducts = function(category) {
     renderCatalogue();
 };
 
+const SEARCH_DEBOUNCE_MS = 250;
 let _searchDebounceTimer = null;
 window.searchProducts = function(query) {
     clearTimeout(_searchDebounceTimer);
     _searchDebounceTimer = setTimeout(() => {
         currentSearch = query.replace(/[<>&"']/g, '');
         renderCatalogue();
-    }, 250);
+    }, SEARCH_DEBOUNCE_MS);
 };
 
 window.sortProducts = function(sortBy) {
