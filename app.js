@@ -278,9 +278,14 @@ window.filterProducts = function(category) {
     renderCatalogue();
 };
 
+const SEARCH_DEBOUNCE_MS = 250;
+let _searchDebounceTimer = null;
 window.searchProducts = function(query) {
-    currentSearch = query.replace(/[<>&"']/g, '');
-    renderCatalogue();
+    clearTimeout(_searchDebounceTimer);
+    _searchDebounceTimer = setTimeout(() => {
+        currentSearch = query.replace(/[<>&"']/g, '');
+        renderCatalogue();
+    }, SEARCH_DEBOUNCE_MS);
 };
 
 window.sortProducts = function(sortBy) {
@@ -330,8 +335,8 @@ window.openModal = function(id) {
     }
     
     body.innerHTML = `
-        <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
-            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" style="max-width: 100%; max-height: 400px; object-fit: contain;" onload="removeWhiteBg(this)">
+        <div style="flex: 1; display:flex; align-items:center; justify-content:center; background:#f5f2ec; border-radius:6px; padding:1.5rem;">
+            <img src="${p.image}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" style="max-width: 100%; max-height: 400px; object-fit: contain;">
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             ${premiumLabel}
@@ -599,41 +604,6 @@ if (sessionStorage.getItem('archiveOpen') === 'true') {
 showPage('home');
 renderBundleBuilder();
 
-// --- Remove white backgrounds from product images ---
-function removeWhiteBg(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-    ctx.drawImage(img, 0, 0);
-    try {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-            const r = data[i], g = data[i+1], b = data[i+2];
-            if (r > 230 && g > 230 && b > 230) {
-                data[i+3] = 0;
-            } else if (r > 200 && g > 200 && b > 200) {
-                data[i+3] = Math.round(255 * (1 - (Math.min(r, g, b) - 200) / 55));
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-        img.src = canvas.toDataURL('image/png');
-    } catch(e) { /* cross-origin or security error — skip */ }
-}
-
-function processProductImages() {
-    document.querySelectorAll('.product-card img').forEach(img => {
-        if (img.dataset.bgRemoved) return;
-        img.dataset.bgRemoved = '1';
-        if (img.complete && img.naturalWidth > 0) {
-            removeWhiteBg(img);
-        } else {
-            img.addEventListener('load', () => removeWhiteBg(img), { once: true });
-        }
-    });
-}
-
 // --- Scroll Reveal Animations ---
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -647,7 +617,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 function observeNewElements() {
     document.querySelectorAll('.product-card:not(.revealed)').forEach((card, i) => {
         card.classList.add('reveal');
-        card.style.setProperty('--reveal-delay', i % 8);
+        card.style.setProperty('--reveal-delay', i % 6);
         revealObserver.observe(card);
     });
 
@@ -663,7 +633,6 @@ renderCatalogue = function() {
     _origRenderCatalogue();
     requestAnimationFrame(() => {
         observeNewElements();
-        processProductImages();
     });
 };
 
